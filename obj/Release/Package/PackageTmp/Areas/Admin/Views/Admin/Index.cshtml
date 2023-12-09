@@ -1,0 +1,739 @@
+﻿@using QUIZ_IT.Models
+@{
+    var nguoiDung = Session["NguoiDung"] as QUIZ_IT.Models.NguoiDung;
+}
+@{
+    ViewBag.Title = "Quản trị - Trắc nghiệm IT";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <h1>DANH SÁCH BÀI TRẮC NGHIỆM</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Danh sách bài trắc nghiệm</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div id="r"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách tất cả bài trắc nghiệm</h3>
+                    </div>
+                    <div class="card-body" id="content">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên bài trắc nghiệm</th>
+                                    <th>Mô tả bài trắc nghiệm</th>
+                                    <th>Tác giả</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data">
+                                @{
+                                    var i = 0;
+                                    foreach (var item in Model)
+                                    {
+
+                                        var CotTenBaiTracNghiem = "CotTenBaiTracNghiem" + item.Id;
+                                        var TextTenBaiTracNghiem = "TextTenBaiTracNghiem" + item.Id;
+                                        var TenBaiTracNghiem = "TenBaiTracNghiem" + item.Id;
+
+                                        var CotMoTaBaiTracNghiem = "CotMoTaBaiTracNghiem" + item.Id;
+                                        var TextMoTaBaiTracNghiem = "TextMoTaBaiTracNghiem" + item.Id;
+                                        var MoTaBaiTracNghiem = "MoTaBaiTracNghiem" + item.Id;
+
+                                        ++i;
+                                        <tr style="width: auto">
+                                            <td>@i</td>
+                                            <td>
+                                                <div id="@CotTenBaiTracNghiem">@item.TenBaiTracNghiem</div>
+                                                <div hidden="hidden" id="@TextTenBaiTracNghiem" class="mb-3">
+                                                    <textarea class="form-control" name="TenBaiTracNghiem" id="@TenBaiTracNghiem" rows="2">@item.TenBaiTracNghiem</textarea>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div id="@CotMoTaBaiTracNghiem">@item.MoTaBaiTracNghiem</div>
+                                                <div hidden="hidden" id="@TextMoTaBaiTracNghiem" class="mb-3">
+                                                    <textarea class="form-control" name="MoTaBaiTracNghiem" id="@MoTaBaiTracNghiem" rows="2">@item.MoTaBaiTracNghiem</textarea>
+                                                </div>
+                                            </td>
+                                            <td>@item.NguoiDung.HoTen</td>
+                                            @if (item.TrangThai == true)
+                                            {
+                                                <td class="text-center"><i class="fas fa-eye-slash" style="color: #ed0202;"></i></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center"><i class="fas fa-check" style="color: #36fa00;"></i></td>
+                                            }
+
+                                            @{
+                                                var btnEdit = "btnSua" + item.Id;
+                                                var btnAdd = "btnThem" + item.Id;
+                                                var btnDeleted = "btnXoa" + item.Id;
+
+                                                <td class="text-center">
+                                                    <button id="@btnEdit" type="button" onclick="SuaBaiTracNghiem('@item.Id')" class="btn btn btn-warning">Sửa <i class="fas fa-pen" style="color: #f5f5f5;"></i></button>
+                                                    <button id="@btnAdd" type="button" onclick="XemCauHoi('@item.Id')" class="btn btn btn-success" data-toggle="modal" data-target="#modelT">Xem tất cả câu hỏi <i class="fas fa-list" style="color: #ffffff;"></i> </button>
+                                                    <div class="modal fade" id="modelT" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLongTitle">DANH SÁCH CÂU HỎI CỦA @item.TenBaiTracNghiem</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <section class="content">
+                                                                        <div class="container-fluid">
+                                                                            <div class="row">
+                                                                                <div class="col-12">
+                                                                                    <div class="card col12">
+                                                                                        <div class="card-header">
+                                                                                            <h3 class="card-title">DANH SÁCH CÂU HỎI</h3>
+                                                                                        </div>
+                                                                                        <div class="card-body">
+                                                                                            <div id="b"></div>
+                                                                                            <div style="float: left" class="mb-3">
+                                                                                                <button type="button" class="btn btn btn-success" onclick="ThemCauHoiMoi()" id="btnCauHoi">Thêm câu hỏi <i class="fa fa-plus-circle" style="color: white"></i></button>
+                                                                                            </div>
+                                                                                            <div class="mb-3">
+                                                                                                <textarea hidden="hidden" placeholder="Vui lòng nhập câu hỏi mới..." class="form-control" style="resize: none" id="NoiDungCauHoiMoi" rows="2"></textarea>
+                                                                                            </div>
+                                                                                            <table id="example1" class="table table-bordered table-striped">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th colspan="2">Nội dung câu hỏi</th>
+                                                                                                        <th></th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody id="dsCauHoi">
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="modal fade" id="modelDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <section class="content">
+                                                                        <div class="container-fluid">
+                                                                            <div class="row">
+                                                                                <div class="col-12">
+                                                                                    <div class="card col12">
+                                                                                        <div class="card-header">
+                                                                                            <h3 class="card-title" id="quesHeader">...</h3>
+
+                                                                                        </div>
+                                                                                        <div class="card-body">
+                                                                                            <div style="float: left" class="mb-3">
+                                                                                                <button type="button" class="btn btn btn-success" onclick="ThemDapAn()" id="btnThemDapAn">Thêm đáp án</button>
+                                                                                            </div>
+
+                                                                                            <table hidden="hidden" id="tb_ThemDapAn" class="table table-bordered table-striped">
+                                                                                                <thead>
+                                                                                                    <tr>
+
+                                                                                                        <th colspan="2">Đáp án</th>
+                                                                                                        <th>Đúng</th>
+                                                                                                        <th>Sai</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td colspan="2"><textarea id="DapAnMoi" class="form-control" style="resize: none" placeholder="Đáp án mới...."></textarea></td>
+                                                                                                        <td>
+                                                                                                            <input name="choose" id="Dung" type="radio" />
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <input id="Sai" name="choose" type="radio" />
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                            <div id="o"></div>
+                                                                                            <table id="example1" class="table table-bordered table-striped">
+                                                                                                <thead>
+                                                                                                    <tr>
+
+                                                                                                        <th colspan="2">Đáp án</th>
+                                                                                                        <th>Kết quả</th>
+                                                                                                        <th></th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody id="tb_DapAn">
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @if (item.TrangThai == true)
+                                                    {
+                                                        <button id="@btnDeleted" type="button" onclick="XoaBaiTracNghiem('@item.Id')" class="btn btn btn-primary">Hiện thị <i class="fas fa-eye" style="color: #ffffff;"></i></button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button id="@btnDeleted" type="button" onclick="XoaBaiTracNghiem('@item.Id')" class="btn btn btn-danger">Ẩn <i class="fas fa-eye-slash" style="color: #ffffff;"></i></button>
+                                                    }
+
+
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                        <div><button id="btnThemBaiTracNghiem" type="button" class="btn btn-success">THÊM BÀI TRẮC NGHIỆM <i id="iconThemBaiTracNghiem" class="fas fa-plus" style="color: #ffffff;"></i></button></div>
+                        <div class="mt-3 text-center" id="t"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <input class="form-control" name="IdNguoiTao" id="IdNguoiTao" type="hidden" value="@nguoiDung.Id">
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</section>
+
+<script>
+
+
+
+</script>
+
+<script>
+
+    function splitString(input, char) {
+        return input.split(char);
+    }
+
+    var itd = -1;
+    var isAddQuestion = 1;
+    var IDDD = -1;
+    function ThemCauHoiMoi() {
+        var NoiDungCauHoiMoiEle = document.getElementById('NoiDungCauHoiMoi');
+
+        var ThemCauHoiNhanh = splitString(NoiDungCauHoiMoiEle.value, '|');
+
+        if (isAddQuestion == 1) {
+            isAddQuestion = 0;
+            NoiDungCauHoiMoiEle.removeAttribute('hidden');
+            $('#btnCauHoi').html('Lưu câu hỏi <i class="fa fa-check-circle" style="color: white"></i>');
+        } else {
+            isAddQuestion = 1;
+            $('#btnCauHoi').html('Thêm câu hỏi <i class="fa fa-plus-circle" style="color: white"></i>');
+            NoiDungCauHoiMoiEle.setAttribute('hidden', 'hidden');
+            var url = "/api/CauHoiTracNghiem/ThemCauHoiMoi?BaiTracNghiemId=" + itd + "&CauHoiMoi=";
+            if (ThemCauHoiNhanh.length != 1) {
+                url += ThemCauHoiNhanh[0];
+            } else {
+                url += document.getElementById('NoiDungCauHoiMoi').value;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#b').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                    setTimeout(function () {
+                        XemCauHoi(itd);
+                        $('#b').html('');
+                    }, 3000);
+
+                    var DanhSachUrl = [];
+                    if (ThemCauHoiNhanh.length != 1) {
+                        var DanhSachDapAn = splitString(ThemCauHoiNhanh[1], ';');
+                        DanhSachDapAn.forEach(t => {
+                            var DapAnChiTiet = splitString(t, ':');
+                            var url = '/api/DapAnTracNghiem/ThemDapAn?CauHoiTracNghiemId=' + data.Id + '&DapAnMoi=' + DapAnChiTiet[0] + '&KetQua=' + DapAnChiTiet[1];
+                            DanhSachUrl.push(url);
+                        });
+                        DanhSachUrl.forEach(t => {
+                            $.ajax({
+                                url: t,
+                                type: 'GET',
+                                contentType: 'application/json',
+                                success: function (r) {
+
+                                },
+                                error: function (e) {
+                                    console.log('Lỗi: ' + e);
+                                }
+                            });
+                        });
+                    }
+                },
+                error: function (err) {
+                    $('#b').html('<div class="text text-center alert alert-danger">Câu hỏi đã tồn tại, vui lòng đổi câu hỏi khác!</div>');
+                    setTimeout(function () {
+                        $('#b').html('');
+                    }, 3000);
+                }
+            });
+        }
+    }
+
+
+
+    function Deleted(id) {
+        var url = '/api/DapAnTracNghiem/XoaDapAn?CauHoiTracNghiemId=' + id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                var url = '/api/CauHoiTracNghiem/XoaCauHoi?BaiTracNghiemId=' + itd + '&CauHoiId=' + id;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $('#b').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                        setTimeout(function () {
+                            XemCauHoi(itd);
+                            $('#b').html('');
+                        }, 3000);
+                    },
+                    error: function (error) {
+
+                    }
+                });
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function EditOrAddResult(id) {
+
+        IDDD = id;
+        $.ajax({
+            url: '/api/DapAnTracNghiem?CauHoiTracNghiemId=' + id,
+            contentType: 'application/json',
+            type: 'GET',
+            success: function (data) {
+                var renderedHTML = '';
+                var x = '';
+                data.forEach(function (item) {
+                    x = item.CauHoiTracNghiem.CauHoi;
+                    renderedHTML += '<tr> <td colspan="2">  <div class="mb-3">  <textarea disabled class="form-control" style="resize: none" id="CauTraLoi' + item.Id + '" rows="2">' + item.CauTraLoi + '</textarea> </div> <td class="my-4 text-center"> ';
+                    if (item.DapAn == true) {
+                        renderedHTML += '<i class="fa fa-check-circle text-success"></i><div id="dHidden' + item.Id + '" hidden="hidden">Đúng <input checked="checked" value="Đúng" name="choose' + item.Id + '" id="Dung' + item.Id + '" type="radio" /><br/>Sai <input value="Sai" name="choose' + item.Id +'" id="Sai' + item.Id +'" type="radio" /></div></td> <td><button id="SuaDapAn' + item.Id +'" onclick="SuaDapAn(' + "'" + item.Id + "'" + ')" class="btn mr-1 btn btn-warning"><i class="fa fa-pen" style="color: white"></i></button><button onclick="XoaDapAn(' + "'" + item.Id + "'" + ')" class="btn btn btn-danger"><i class="fa fa-trash" style="color: white"></i></button></td></tr> ';
+                    } else {
+                        renderedHTML += '<i class="fas fa-times" style="color: #fe0606;"></i><div id="dHidden' + item.Id + '" hidden="hidden">Đúng <input value="Đúng" name="choose' + item.Id + '" id="Dung' + item.Id + '" type="radio" /><br/>Sai <input value="Sai" name="choose' + item.Id + '" id="Sai' + item.Id +'" type="radio" checked="checked" /></div> </td ><td><button id="SuaDapAn' + item.Id +'" onclick="SuaDapAn(' + "'" + item.Id + "'" + ')" class="btn mr-1 btn btn-warning"><i class="fa fa-pen" style="color: white"></i></button><button  onclick="XoaDapAn(' + "'" + item.Id + "'" + ')" class="btn btn btn-danger"><i class="fa fa-trash" style="color: white"></i></td> </tr > ';
+                    }
+                });
+                $('#quesHeader').html(x);
+                $('#tb_DapAn').html(renderedHTML);
+            },
+            error: function (error) {
+
+            }
+        });
+    }
+
+    var isSuaDapAn = 1;
+    function SuaDapAn(id) {
+        var dapAnMoi = document.getElementById('CauTraLoi' + id);
+        var buttonSuaDapAn = document.getElementById('SuaDapAn' + id);
+        var chooseHidden = document.getElementById('dHidden' + id);
+        var choose = document.getElementById('Dung' + id);
+        var url = '/api/DapAnTracNghiem/SuaMotDapAn?id=' + id + '&dapAnMoi=' + dapAnMoi.value + '&ketQua=';
+
+
+
+        if (choose.checked) {
+            url += 'true';
+        } else {
+            url += false;
+        }
+
+        if (isSuaDapAn == 1) {
+            dapAnMoi.removeAttribute('disabled');
+            chooseHidden.removeAttribute('hidden');
+            buttonSuaDapAn.setAttribute('class', 'btn m-1 btn btn-success');
+            $('#SuaDapAn' + id).html('<i class="fa fa-save text-white"></i>');
+            isSuaDapAn = 0;
+        } else {
+
+            dapAnMoi.setAttribute('disabled', 'disable');
+            buttonSuaDapAn.setAttribute('class', 'btn m-1 btn btn-warning');
+            chooseHidden.setAttribute('hidden', 'hidden');
+            $('#SuaDapAn' + id).html('<i class="fa fa-pen text-white"></i>');
+            isSuaDapAn = 1;
+            $.ajax({
+                url: url,
+                contentType: 'application/json',
+                type: 'GET',
+                success: function (data) {
+                    $('#o').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                    setTimeout(function () {
+                        $('#o').html('');
+                        EditOrAddResult(IDDD);
+                    }, 3000);
+                },
+                error: function (error) {
+                    $('#o').html('<div class="text text-center alert alert-danger">Hệ thống đang lỗi, vui lòng thử lại sau....</div>');
+                    setTimeout(function () {
+                        $('#o').html('');
+                    }, 3000);
+                }
+            });
+        }
+    }
+
+
+    function XoaDapAn(id) {
+        var url = '/api/DapAnTracNghiem/XoaMotDapAn?id=' + id;
+        $.ajax({
+            url: url,
+            contentType: 'application/json',
+            type: 'GET',
+            success: function (data) {
+                $('#o').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                setTimeout(function () {
+                    $('#o').html('');
+                    EditOrAddResult(IDDD);
+                }, 3000);
+            },
+            error: function (error) {
+                $('#o').html('<div class="text text-center alert alert-danger">Hệ thống đang lỗi, vui lòng thử lại sau....</div>');
+                setTimeout(function () {
+                    $('#o').html('');
+                }, 3000);
+            }
+        });
+    }
+
+    var isThemDapAn = 1;
+    function ThemDapAn() {
+        var TableThemDapAnEle = document.getElementById('tb_ThemDapAn');
+        var DapAnMoiEle = document.getElementById('DapAnMoi');
+        var DungEle = document.getElementById('Dung');
+        var BTN = document.getElementById('btnThemDapAn');
+
+        if (isThemDapAn == 1) {
+            isThemDapAn = 0;
+            TableThemDapAnEle.removeAttribute('hidden');
+            BTN.innerText = 'Lưu';
+        } else {
+            BTN.innerText = 'Thêm đáp án';
+            isThemDapAn = 1;
+            TableThemDapAnEle.setAttribute('hidden', 'hidden');
+            var url = '/api/DapAnTracNghiem/ThemDapAn?CauHoiTracNghiemId=' + IDDD + '&DapAnMoi=' + DapAnMoiEle.value + '&KetQua=';
+
+            if (DungEle.checked) {
+                url += 'true';
+            } else {
+                url += 'false';
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#o').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                    setTimeout(function () {
+                        $('#o').html('');
+
+                        $.ajax({
+                            url: '/api/DapAnTracNghiem?CauHoiTracNghiemId=' + IDDD,
+                            contentType: 'application/json',
+                            type: 'GET',
+                            success: function (data) {
+                                @*var renderedHTML = '';
+                                var x = '';
+                                data.forEach(function (item) {
+                                    x = item.CauHoiTracNghiem.CauHoi;
+                                    renderedHTML += '<tr> <td colspan="2">  <div class="mb-3">  <textarea disabled class="form-control" style="resize: none" id="CauTraLoi' + item.Id + '" rows="2">' + item.CauTraLoi + '</textarea> </div> <td class="my-4 text-center"> ';
+                                    if (item.DapAn == true) {
+                                        renderedHTML += '<i class="fa fa-check-circle text-success"></i></td> </tr> ';
+                                    } else {
+                                        renderedHTML += '<i class="fas fa-times" style="color: #fe0606;"></i></td > </tr > ';
+                                    }
+                                });
+                                $('#quesHeader').html(x);
+                                $('#tb_DapAn').html(renderedHTML);*@
+                                EditOrAddResult(IDDD);
+                            },
+                            error: function (error) {
+
+                            }
+                        });
+                    }, 3000);
+                },
+                error: function (err) {
+                    $('#o').html('<div class="text text-center alert alert-danger">Đáp án đã tồn tại, vui lòng đổi đáp án khác!</div>');
+                    setTimeout(function () {
+                        $('#o').html('');
+                    }, 3000);
+                }
+            });
+        }
+    }
+
+
+
+
+    function XemCauHoi(id) {
+        itd = id;
+        var xxx = '';
+        $.ajax({
+            type: "GET",
+            url: "/api/CauHoiTracNghiem?BaiTracNghiemId=" + id,
+            contentType: "application/json",
+            success: function (data) {
+                var renderedHTML = '';
+                data.forEach(function (item) {
+                    renderedHTML += '<tr> <td colspan="2">  <div class="mb-3">  <textarea disabled class="form-control" style="resize: none" id="NoiDungCauHoi' + item.Id + '" rows="3">' + item.CauHoi + '</textarea><button id="SuaCauHoi' + item.Id + '" onclick="SuaCauHoi(' + "'" + item.Id + "'" + ')" class="btn btn btn"><i class="fa fa-pen"></i></button></div> <td> <div style="float: left" class="mb-3 text-center"> ';
+                    renderedHTML += '<button type="button" class="btn my-1 btn btn-primary" data-toggle="modal" onclick="EditOrAddResult(' + "'" + item.Id + "'" + ')" data-target="#modelDetails" id="btnXemChiTietCauHoi' + item.Id + '">Thêm đáp án</button> <button type="button" class="btn btn btn-danger" onclick="Deleted(' + item.Id + ')" id="btnDeleted' + item.Id + '">Xóa</button></div>  </td>  </tr> ';
+                    xxx = item.BaiTracNghiem.TenBaiTracNghiem;
+                });
+                if (xxx != '') {
+                    $('#exampleModalLongTitle').html('DANH SÁCH CÂU HỎI CỦA ' + xxx);
+                } else {
+                    $('#exampleModalLongTitle').html('BÀI TRẮC NGHIỆM NÀY HIỆN CHƯA CÓ CÂU HỎI');
+                }
+
+                $('#dsCauHoi').html(renderedHTML);
+            },
+            error: function (err) {
+                $('#t').html('<div class="text text-center alert alert-danger">Tên bài trắc nghiệm này đã tồn tại, vui lòng đổi tên khác</div>');
+            }
+        });
+    }
+
+    var isSuaCauHoi = 1;
+    function SuaCauHoi(id) {
+        var NoiDungEle = document.getElementById("NoiDungCauHoi" + id);
+        if (isSuaCauHoi == 1) {
+            NoiDungEle.removeAttribute('disabled');
+            isSuaCauHoi = 0;
+            $('#SuaCauHoi' + id).html('<i class="fas fa-check" style="color: #14e653;"></i>');
+        } else {
+            NoiDungEle.setAttribute('disabled', 'disabled');
+            isSuaCauHoi = 1;
+            $('#SuaCauHoi' + id).html('<i class="fa fa-pen"></i>')
+            $.ajax({
+                type: "GET",
+                url: "/api/CauHoiTracNghiem/SuaCauHoi?id=" + id + '&CauHoiMoi=' + NoiDungEle.value,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#b').html('<div class="text text-center alert alert-success">Đổi câu hỏi trắc nghiệm thành công! vui lòng đợi hệ thống cập nhật dữ liệu...</div>');
+                    setTimeout(function () {
+                        XemCauHoi(itd);
+                        $('#b').html('');
+                    }, 3000);
+                },
+                error: function (err) {
+                    $('#b').html('<div class="text text-center alert alert-danger">Tên bài trắc nghiệm này đã tồn tại, vui lòng đổi tên khác</div>');
+                    setTimeout(function () {
+
+                        $('#b').html('');
+                    }, 3000);
+                }
+            });
+        }
+    }
+
+</script>
+
+
+
+<script>
+    var isEdit = 1;
+    function SuaBaiTracNghiem(id) {
+        id = parseInt(id);
+        var TextTenBaiTracNghiemEle = document.getElementById('TextTenBaiTracNghiem' + id);
+        var TextMoTaBaiTracNghiemEle = document.getElementById('TextMoTaBaiTracNghiem' + id);
+        var CotTenBaiTracNghiemEle = document.getElementById('CotTenBaiTracNghiem' + id);
+        var CotMoTaBaiTracNghiemEle = document.getElementById('CotMoTaBaiTracNghiem' + id);
+        var ButtonSua = document.getElementById('btnSua' + id);
+        var ButtonThem = document.getElementById('btnThem' + id);
+        var ButtonXoa = document.getElementById('btnXoa' + id);
+
+
+
+        if (isEdit == 1) {
+            ButtonSua.setAttribute('class', 'btn btn btn-success');
+            ButtonThem.setAttribute('disabled', 'disabled');
+            ButtonXoa.setAttribute('disabled', 'disabled');
+            $('#btnSua' + id).html('Lưu <i class="fas fa-save" style="color: #f5f5f5;"></i>');
+
+            CotMoTaBaiTracNghiemEle.setAttribute('hidden', 'hidden');
+            CotTenBaiTracNghiemEle.setAttribute('hidden', 'hidden');
+            TextTenBaiTracNghiemEle.removeAttribute('hidden');
+            TextMoTaBaiTracNghiemEle.removeAttribute('hidden');
+            isEdit = 0;
+        } else {
+            ButtonSua.setAttribute('class', 'btn btn btn-warning');
+            ButtonThem.removeAttribute('disabled');
+            ButtonXoa.removeAttribute('disabled');
+
+            $('#btnSua' + id).html('Lưu <i class="fas fa-pen" style="color: #f5f5f5;"></i>');
+            CotMoTaBaiTracNghiemEle.removeAttribute('hidden');
+            CotTenBaiTracNghiemEle.removeAttribute('hidden');
+            TextTenBaiTracNghiemEle.setAttribute('hidden', 'hidden');
+            TextMoTaBaiTracNghiemEle.setAttribute('hidden', 'hidden');
+
+            $.ajax({
+                type: "GET",
+                url: "/api/BaiTracNghiem/SuaBaiTracNghiem?id=" + id + "&tenBaiTracNghiemMoi=" + document.getElementById('TenBaiTracNghiem' + id).value + "&moTaBaiTracNghiemMoi=" + document.getElementById('MoTaBaiTracNghiem' + id).value,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#r').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                    setTimeout(function () {
+                        window.location.href = '/Admin/Admin/Index';
+                    }, 3000);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            isEdit = 1;
+        }
+    }
+</script>
+<script>
+    function XoaBaiTracNghiem(id) {
+        $.ajax({
+            type: "GET",
+            url: "/api/BaiTracNghiem/XoaBaiTracNghiem?id=" + id,
+            contentType: "application/json",
+            success: function (data) {
+                $('#r').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                setTimeout(function () {
+                    window.location.href = '/Admin/Admin/Index';
+                }, 3000);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div id="BangThemBaiTracNghiemMoi" class="card" hidden="hidden">
+                    <div class="card-header">
+                        <h3 class="card-title">TẠO BÀI TRẮC NGHIỆM MỚI</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tên bài trắc nghiệm</th>
+                                    <th>Mô tả bài trắc nghiệm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" id="TenBaiTracNghiem" rows="3"></textarea>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" id="MoTaBaiTracNghiem" rows="3"></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var isAdd = 1;
+    $('#btnThemBaiTracNghiem').click(function () {
+        var BangThem = document.getElementById('BangThemBaiTracNghiemMoi');
+        var ButtonThem = document.getElementById('btnThemBaiTracNghiem');
+        if (isAdd == 1) {
+            $('#btnThemBaiTracNghiem').html('LƯU <i id="iconThemBaiTracNghiem" class="fas fa-save" style="color: #ffffff;"></i>');
+            BangThem.removeAttribute('hidden');
+            isAdd = 0;
+        } else {
+            $('#btnThemBaiTracNghiem').html('THÊM BÀI TRẮC NGHIỆM <i id="iconThemBaiTracNghiem" class="fas fa-plus" style="color: #ffffff;"></i>');
+            BangThem.setAttribute('hidden', 'hidden');
+            var NguoiTao = $('#IdNguoiTao').val();
+            var TenBaiTracNghiem = document.getElementById('TenBaiTracNghiem').value;
+            var MoTaBaiTracNghiem = document.getElementById('MoTaBaiTracNghiem').value;
+
+            $.ajax({
+                type: "GET",
+                url: "/api/BaiTracNghiem/ThemBaiTracNghiem?NguoiTao=" + NguoiTao + "&TenBaiTracNghiem=" + TenBaiTracNghiem + "&MoTaBaiTracNghiem=" + MoTaBaiTracNghiem,
+                contentType: "application/json",
+                success: function (data) {
+                    $('#t').html('<div class="text text-center alert alert-success">Vui lòng chờ hệ thống cập nhật dữ liệu....</div>');
+                    setTimeout(function () {
+                        window.location.href = '/Admin/Admin/Index';
+                    }, 3000);
+                },
+                error: function (err) {
+                    $('#t').html('<div class="text text-center alert alert-danger">Tên bài trắc nghiệm này đã tồn tại, vui lòng đổi tên khác</div>');
+                }
+            });
+
+            isAdd = 1;
+        }
+
+    });
+</script>
+

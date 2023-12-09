@@ -1,0 +1,286 @@
+﻿
+@{
+    ViewBag.Title = "Nâng Cấp Tài Khoản - Trắc nghiệm IT";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+@{
+    var user = (QUIZ_IT.Models.NguoiDung)Session["NguoiDung"];
+}
+
+<style>
+    .main__heading {
+        font-weight: 600;
+        font-size: 2.25em;
+        margin-bottom: 0.75em;
+        text-align: center;
+        color: #eceff1;
+    }
+
+    .cards {
+        position: relative;
+    }
+
+    .card {
+        --flow-space: 0.5em;
+        --hsl: var(--hue), var(--saturation), var(--lightness);
+        flex: 1 1 14rem;
+        padding: 1.5em 2em;
+        display: grid;
+        grid-template-rows: auto auto auto 1fr;
+        align-items: start;
+        gap: 1.25em;
+        color: #eceff1;
+        background-color: #2b2b2b;
+        border: 1px solid #eceff133;
+        border-radius: 15px;
+    }
+
+        .card:nth-child(1) {
+            --hue: 165;
+            --saturation: 82.26%;
+            --lightness: 51.37%;
+        }
+
+    .card__bullets {
+        line-height: 1.4;
+    }
+
+    .card__heading {
+        font-size: 1.05em;
+        font-weight: 600;
+    }
+
+    .card__price {
+        font-size: 1.75em;
+        font-weight: 700;
+    }
+
+    .flow > * + * {
+        margin-top: var(--flow-space, 1.25em);
+    }
+
+    .cta {
+        display: block;
+        align-self: end;
+        margin: 1em 0 0.5em 0;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: transparent;
+        outline: 1px solid white;
+        padding: 0.7em;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .card:hover {
+        --lightness: 80%;
+        background: #ffffff80;
+        color: #000;
+        outline: 1px solid rgb(255, 255, 255);
+        box-shadow: inset 0 0 80px whitesmoke, inset 20px 0 80px rgba(255, 0, 255, 0.747), inset -20px 0 80px #0ff, inset 20px 0 300px #f0f, inset -20px 0 300px #0ff, 0 0 50px #fff, -10px 0 80px #f0f, 10px 0 80px #0ff;
+        transition: all ease-in-out 0.3s;
+    }
+
+        .card:hover > .cta {
+            outline: none;
+            background-color: #0d0d0d;
+        }
+</style>
+
+<div class="container m-5">
+    <div class="container-fluid" style="display: flex;">
+        <div class="col-6 m-4">
+            <div class="cards__inner" style="cursor: pointer">
+                <div class="cards__card card">
+                    <p class="card__heading">Gói Cơ Bản</p>
+                    <p class="card__price">$1/tháng</p>
+                    <ul class="card_bullets flow" role="list">
+                        <li>Tham gia lớp học 2 buổi / tuần (19h - 20h)</li>
+                        <li>Được giải đáp các câu hỏi trên website</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 m-4">
+            <style>
+                .cardd {
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgb(7 16 45);
+                    background: linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84));
+                    background: -webkit-linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84));
+                    display: flex;
+                    flex-direction: column;
+                    padding: 20px;
+                    border-radius: 20px;
+                    border: 1px solid rgb(84 90 106);
+                }
+
+                .small-textt, .titlee, .descc {
+                    font-weight: 600;
+                }
+
+                .titlee, .descc {
+                    margin: 8px 0;
+                }
+
+                .small-textt {
+                    color: #488aec;
+                    font-size: 14px;
+                }
+
+                .titlee {
+                    color: #fff;
+                    font-size: 26px;
+                    line-height: 26px;
+                }
+
+                .descc {
+                    color: rgb(151 153 167);
+                    font-size: 13px;
+                }
+
+                .buttonss {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 10px;
+                    cursor: pointer;
+                }
+
+                .buttonn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-radius: 10px;
+                    padding: 6px;
+                    text-decoration: none;
+                }
+
+                    .buttonn:first-child {
+                        box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17;
+                        background-color: #488aec;
+                    }
+
+                    .buttonn:last-child {
+                        box-shadow: 0 4px 6px -1px #0b162531, 0 2px 4px -1px #0e192b17;
+                        background-color: #fff;
+                    }
+
+                .iconn {
+                    height: 25px;
+                    width: 25px;
+                }
+
+                    .iconn svg {
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                        .iconn svg:last-child {
+                            fill: #000
+                        }
+
+                .button-textt {
+                    display: flex;
+                    flex-direction: column;
+                    margin-left: 8px;
+                }
+
+                    .button-textt span:first-child {
+                        font-size: 12px;
+                        font-weight: 600;
+                    }
+
+                .googlee span:first-child {
+                    color: rgb(219 206 253);
+                }
+
+                .applee span:first-child {
+                    color: rgb(81 87 108);
+                }
+
+                .googlee span:last-child {
+                    color: #fff;
+                    font-weight: 800;
+                }
+
+                .applee span:last-child {
+                    color: #000;
+                    font-weight: 800;
+                }
+            </style>
+            <div class="cardd">
+                <span class="small-textt">Thông tin thanh toán</span>
+                <span class="titlee">Nâng cấp tài khoản gói cơ bản</span>
+                <span class="descc">Tổng thanh toán $1 or 25.000 vnđ / tháng</span>
+                <span class="descc mx-3">Tính năng khác</span>
+                <span class="descc mx-5">Tham gia lớp học 2 buổi / tuần (19h - 20h)</span>
+                <span class="descc mx-5">Được giải đáp các câu hỏi trên website</span>
+
+                <div class="buttonss">
+                    @if (user.Vip == 1 || user.Vip == 2)
+                    {
+                        <a class="buttonn" style="text-decoration: none; color: white">
+                            <span class="iconn">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z" /></svg>
+                                <style>
+                                    svg {
+                                        fill: white;
+                                    }
+                                </style>
+                            </span>
+                            <div class="button-textt googlee">
+                                <span>Ngân hàng</span>
+                                <span>Thẻ nội địa</span>
+                            </div>
+                        </a>
+                       
+                    }
+                    else
+                    {
+                        <a onclick="RedirectPaymentPage()" class="buttonn" style="text-decoration: none; color: white">
+                            <span class="iconn">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z" /></svg>
+                                <style>
+                                    svg {
+                                        fill: white;
+                                    }
+                                </style>
+                            </span>
+                            <div class="button-textt googlee">
+                                <span>Ngân hàng</span>
+                                <span>Thẻ nội địa</span>
+                            </div>
+                        </a>
+
+                    }
+
+                    <a class="buttonn" style="text-decoration: none; color: white">
+                        <span class="iconn">
+                            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M0 224h192V32H0v192zM64 96h64v64H64V96zm192-64v192h192V32H256zm128 128h-64V96h64v64zM0 480h192V288H0v192zm64-128h64v64H64v-64zm352-64h32v128h-96v-32h-32v96h-64V288h96v32h64v-32zm0 160h32v32h-32v-32zm-64 0h32v32h-32v-32z" /></svg>
+                            </svg>
+                        </span>
+                        <div class="button-textt applee">
+                            <span>Hiện không hỗ trợ</span>
+                            <span>QR Code</span>
+                        </div>
+                    </a>
+                </div>
+   
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function RedirectPaymentPage() {
+        window.location.href = '/NguoiDung/ThanhToan?upgradeType=1';
+    }
+</script>
+
+

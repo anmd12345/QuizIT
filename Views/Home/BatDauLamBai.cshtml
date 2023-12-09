@@ -1,0 +1,1368 @@
+﻿
+@{
+    ViewBag.Title = "Trắc nghiệm";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+
+<style>
+    .like-dislike-container {
+        --dark-grey: #e9e9e9;
+        --middle-grey: #e0e0e0;
+        --lightest-grey: linear-gradient(#3b3b3b,#313131);
+        --shadow: 0 5px 15px 0 #00000026;
+        --shadow-active: 0 5px 5px 0 #00000026;
+        --border-radius-main: 10px;
+        --border-radius-icon: 50px;
+        position: relative;
+        display: flex;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        cursor: default;
+        opacity: .9;
+        margin: auto;
+        padding: 1.5rem;
+        max-width: max-content;
+        border-radius: var(--border-radius-main);
+        transition: .2s ease all;
+    }
+
+        .like-dislike-container:hover {
+            box-shadow: var(--shadow-active);
+        }
+
+        .like-dislike-container .tool-box {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            top: 0;
+            right: 0;
+            border-radius: var(--border-radius-main);
+        }
+
+        .like-dislike-container .btn-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: .8rem;
+            height: .8rem;
+            color: transparent;
+            font-size: 0;
+            cursor: pointer;
+            background-color: #ff5f5f80;
+            border: none;
+            border-radius: var(--border-radius-main);
+            transition: .2s ease all;
+        }
+
+            .like-dislike-container .btn-close:hover {
+                width: 1rem;
+                height: 1rem;
+                font-size: 2px;
+                color: #ffffff;
+                background-color: #ff5f5fcc;
+                box-shadow: var(--shadow-active);
+            }
+
+            .like-dislike-container .btn-close:active {
+                width: .9rem;
+                height: .9rem;
+                font-size: 2px;
+                color: #ffffffde;
+                --shadow-btn-close: 0 3px 3px 0 #00000026;
+                box-shadow: var(--shadow-btn-close);
+            }
+
+        .like-dislike-container .text-content {
+            margin-bottom: 1rem;
+            font-size: 2px;
+            line-height: 1.6;
+            cursor: default;
+        }
+
+        .like-dislike-container .icons-box {
+            display: flex;
+        }
+
+        .like-dislike-container .icons {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: .6;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid var(--middle-grey);
+            border-radius: var(--border-radius-icon);
+            transition: .2s ease all;
+        }
+
+            .like-dislike-container .icons:hover {
+                opacity: .9;
+                box-shadow: var(--shadow);
+            }
+
+            .like-dislike-container .icons:active {
+                opacity: .9;
+                box-shadow: var(--shadow-active);
+            }
+
+            .like-dislike-container .icons .btn-label {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 0.5rem;
+                cursor: pointer;
+                position: relative;
+            }
+
+        .like-dislike-container .like-text-content {
+            border-right: 0.1rem solid var(--dark-grey);
+            padding: 0 0.6rem 0 0.5rem;
+            pointer-events: none;
+        }
+
+        .like-dislike-container .dislike-text-content {
+            border-left: 0.1rem solid var(--dark-grey);
+            padding: 0 0.5rem 0 0.6rem;
+            pointer-events: none;
+        }
+
+        .like-dislike-container .icons .svgs {
+            width: 1.3rem;
+            fill: black;
+            box-sizing: content-box;
+            padding: 10px 10px;
+            transition: .2s ease all;
+        }
+
+        /* Hide the default checkbox */
+        .like-dislike-container .icons .input-box {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .like-dislike-container .icons #icon-like-regular {
+            display: block;
+        }
+
+        .like-dislike-container .icons #icon-like-solid {
+            display: none;
+        }
+
+        .like-dislike-container .icons:hover :is(#icon-like-solid, #icon-like-regular) {
+            animation: rotate-icon-like 0.7s ease-in-out both;
+        }
+
+        .like-dislike-container .icons #like-checkbox:checked ~ #icon-like-regular {
+            display: none;
+            animation: checked-icon-like 0.5s;
+        }
+
+        .like-dislike-container .icons #like-checkbox:checked ~ #icon-like-solid {
+            display: block;
+            animation: checked-icon-like 0.5s;
+        }
+
+        .like-dislike-container .icons #icon-dislike-regular {
+            display: block;
+            transform: rotate(180deg);
+        }
+
+        .like-dislike-container .icons #icon-dislike-solid {
+            display: none;
+            transform: rotate(180deg);
+        }
+
+        .like-dislike-container .icons:hover :is(#icon-dislike-solid, #icon-dislike-regular) {
+            animation: rotate-icon-dislike 0.7s ease-in-out both;
+        }
+
+        .like-dislike-container .icons #dislike-checkbox:checked ~ #icon-dislike-regular {
+            display: none;
+            animation: checked-icon-dislike 0.5s;
+        }
+
+        .like-dislike-container .icons #dislike-checkbox:checked ~ #icon-dislike-solid {
+            display: block;
+            animation: checked-icon-dislike 0.5s;
+        }
+
+        .like-dislike-container .icons .fireworks {
+            transform: scale(0.4);
+        }
+
+        .like-dislike-container .icons #like-checkbox:checked ~ .fireworks > .checked-like-fx {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            right: 40px;
+            border-radius: 50%;
+            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+            animation: 1s fireworks-bang ease-out forwards, 1s fireworks-gravity ease-in forwards, 5s fireworks-position linear forwards;
+            animation-duration: 1.25s, 1.25s, 6.25s;
+        }
+
+        .like-dislike-container .icons #dislike-checkbox:checked ~ .fireworks > .checked-dislike-fx {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            left: 40px;
+            border-radius: 50%;
+            box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+            animation: 1s fireworks-bang ease-out forwards, 1s fireworks-gravity ease-in forwards, 5s fireworks-position linear forwards;
+            animation-duration: 1.25s, 1.25s, 6.25s;
+        }
+
+    /* Shake Animation */
+    @@keyframes rotate-icon-like {
+        0% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+
+        25% {
+            transform: rotate(3deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(-3deg) translate3d(0, 0, 0);
+        }
+
+        75% {
+            transform: rotate(1deg) translate3d(0, 0, 0);
+        }
+
+        100% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+    }
+
+    @@keyframes rotate-icon-dislike {
+        0% {
+            transform: rotate(180deg) translate3d(0, 0, 0);
+        }
+
+        25% {
+            transform: rotate(183deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(177deg) translate3d(0, 0, 0);
+        }
+
+        75% {
+            transform: rotate(181deg) translate3d(0, 0, 0);
+        }
+
+        100% {
+            transform: rotate(180deg) translate3d(0, 0, 0);
+        }
+    }
+
+    /* Checked Animation */
+    @@keyframes checked-icon-like {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.2) rotate(-10deg);
+        }
+    }
+
+    @@keyframes checked-icon-dislike {
+        0% {
+            transform: scale(0) rotate(180deg);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.2) rotate(170deg);
+        }
+    }
+
+    /* Fireworks Animation */
+    @@keyframes fireworks-position {
+        0%, 19.9% {
+            margin-top: 10%;
+            margin-left: 40%;
+        }
+
+        20%, 39.9% {
+            margin-top: 40%;
+            margin-left: 30%;
+        }
+
+        40%, 59.9% {
+            margin-top: 20%;
+            margin-left: 70%;
+        }
+
+        60%, 79.9% {
+            margin-top: 30%;
+            margin-left: 20%;
+        }
+
+        80%, 99.9% {
+            margin-top: 30%;
+            margin-left: 80%;
+        }
+    }
+
+    @@keyframes fireworks-gravity {
+        to {
+            transform: translateY(200px);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes fireworks-bang {
+        to {
+            box-shadow: 114px -107.3333333333px #8800ff, 212px -166.3333333333px #a600ff, 197px -6.3333333333px #ff006a, 179px -329.3333333333px #3300ff, -167px -262.3333333333px #ff0062, 233px 65.6666666667px #ff008c, 81px 42.6666666667px #0051ff, -13px 54.6666666667px #00ff2b, -60px -183.3333333333px #0900ff, 127px -259.3333333333px #ff00e6, 117px -122.3333333333px #00b7ff, 95px 20.6666666667px #ff8000, 115px 1.6666666667px #0004ff, -160px -328.3333333333px #00ff40, 69px -242.3333333333px #000dff, -208px -230.3333333333px #ff0400, 30px -15.3333333333px #e6ff00, 235px -15.3333333333px #fb00ff, 80px -232.3333333333px #d5ff00, 175px -173.3333333333px #00ff3c, -187px -176.3333333333px #aaff00, 4px 26.6666666667px #ff6f00, 227px -106.3333333333px #ff0099, 119px 17.6666666667px #00ffd5, -102px 4.6666666667px #ff0088, -16px -4.3333333333px #00fff7, -201px -310.3333333333px #00ffdd, 64px -181.3333333333px #f700ff, -234px -15.3333333333px #00fffb, -184px -263.3333333333px #aa00ff, 96px -303.3333333333px #0037ff, -139px 10.6666666667px #0026ff, 25px -205.3333333333px #00ff2b, -129px -322.3333333333px #40ff00, -235px -187.3333333333px #26ff00, -136px -237.3333333333px #0091ff, -82px -321.3333333333px #6a00ff, 7px -267.3333333333px #ff00c8, -155px 30.6666666667px #0059ff, -85px -73.3333333333px #6a00ff, 60px -199.3333333333px #55ff00, -9px -289.3333333333px #00ffaa, -208px -167.3333333333px #00ff80, -13px -299.3333333333px #ff0004, 179px -164.3333333333px #ff0044, -112px 12.6666666667px #0051ff, -209px -125.3333333333px #ff00bb, 14px -101.3333333333px #00ff95, -184px -292.3333333333px #ff0099, -26px -168.3333333333px #09ff00, 129px -67.3333333333px #0084ff, -17px -23.3333333333px #0059ff, 129px 34.6666666667px #7300ff, 35px -24.3333333333px #ffd900, -12px -297.3333333333px #ff8400, 129px -156.3333333333px #0dff00, 157px -29.3333333333px #1a00ff, -221px 6.6666666667px #ff0062, 0px -311.3333333333px #ff006a, 155px 50.6666666667px #00ffaa, -71px -318.3333333333px #0073ff;
+        }
+    }
+
+    .modal {
+        display: none; /* Ẩn modal ban đầu */
+        position: fixed; /* Vị trí cố định trên màn hình */
+        z-index: 1; /* Hiển thị trên tất cả các phần tử khác */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Cho phép cuộn nếu nội dung quá dài */
+        background-color: rgba(0,0,0,0.4); /* Màu nền xám đen với độ mờ */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* Căn giữa theo chiều dọc và ngang */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .cta {
+        border: none;
+        background: none;
+    }
+
+        .cta span {
+            padding-bottom: 7px;
+            letter-spacing: 4px;
+            font-size: 14px;
+            padding-right: 15px;
+            text-transform: uppercase;
+        }
+
+        .cta svg {
+            transform: translateX(-8px);
+            transition: all 0.3s ease;
+        }
+
+        .cta:hover svg {
+            transform: translateX(0);
+        }
+
+        .cta:active svg {
+            transform: scale(0.9);
+        }
+
+    .hover-underline-animation {
+        position: relative;
+        color: black;
+        padding-bottom: 20px;
+    }
+
+        .hover-underline-animation:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #000000;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+
+    .cta:hover .hover-underline-animation:after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+    .box {
+        flex: 1 0 23%; /* Kích thước cố định cho mỗi box và đảm bảo chúng hiển thị 4 box trên mỗi dòng */
+        height: 200px;
+        margin: 5px;
+        background-color: lightblue;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .ks {
+        background-color: forestgreen;
+        color: white;
+        border-radius: 10px;
+    }
+
+
+
+
+
+    .card {
+        width: 80%;
+        background: #FFFFFF;
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 11px;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 0 20px;
+    }
+
+        .search-container input {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            outline: none;
+            font-size: 13px;
+        }
+
+    .categories {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 0px 20px 20px 20px;
+    }
+
+        .categories button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 15px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            box-shadow: 0px 0.5px 0.5px #EFEFEF, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+            border-radius: 20px;
+            font-weight: 600;
+            color: #171718;
+            transition: all 0.6s cubic-bezier(0.15, 0.83, 0.66, 1);
+        }
+
+            .categories button:hover {
+                transform: scale(1.05) translateY(-3px);
+            }
+
+    .results {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .results hr {
+            width: 100%;
+            height: 1px;
+            border: 0;
+            background-color: #ECECEC;
+        }
+
+        .results p {
+            padding: 0 20px;
+        }
+
+    p.label {
+        font-weight: 600;
+        font-size: 11px;
+        line-height: 13px;
+        color: #5F6368;
+    }
+
+    .results .entry {
+        display: grid;
+        grid-template-columns: 40px 1fr 40px;
+        gap: 12px;
+        padding: 5px 20px;
+        transition: all 0.2s cubic-bezier(0.15, 0.83, 0.66, 1);
+    }
+
+        .results .entry:hover {
+            background-color: #F5F8FE;
+        }
+
+    .results .results-list .entry:hover .icon {
+        background-color: #1763fa;
+    }
+
+        .results .results-list .entry:hover .icon svg path,
+        .results .results-list .entry:hover .icon svg circle {
+            stroke: #ffffff;
+        }
+
+    .results .results-list .entry:hover label {
+        color: #1763fa;
+    }
+
+    .results .results-list .entry:hover span {
+        color: #7ba0eb;
+    }
+
+    .results .results-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .results .entry .icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ECECEC;
+        border-radius: 7px;
+        transition: all 0.2s cubic-bezier(0.15, 0.83, 0.66, 1);
+    }
+
+    .results .entry .desc {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+    }
+
+        .results .entry .desc label {
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 15px;
+            color: #171718;
+        }
+
+        .results .entry .desc span {
+            font-weight: 600;
+            font-size: 10px;
+            line-height: 12px;
+            color: #72767c;
+        }
+
+    .results .entry .badge {
+        width: 40px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        background: #DDFFDE;
+        border: 1px solid #08581d0e;
+        border-radius: 7px;
+        font-weight: 700;
+        font-size: 11px;
+        line-height: 13px;
+        text-align: center;
+        color: #08581D;
+    }
+
+    .card-footer {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-top: 10px;
+        padding: 0 7px;
+        background: #F8F8F8;
+    }
+
+    .card .action {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .card .action p {
+            padding-left: 5px;
+        }
+
+    .card-footer button {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        border: 0;
+        background: #ECECEC;
+        outline: none;
+    }
+
+    .edit-actions {
+        width: 100%;
+        text-align: right;
+        padding-right: 10px;
+        opacity: 0.6;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .post-card {
+        width: 100%;
+        height: auto;
+        background: white;
+        padding: 10px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .post-card textarea {
+            resize: none;
+            width: 100%;
+            height: 40%;
+            padding: 5px;
+            font-family: Sans-serif;
+            font-size: 16px;
+            background-color: transparent;
+            border: none;
+            color: black;
+        }
+
+    hr {
+        border: 1px solid #464646;
+        width: 100%;
+        border-radius: 10em;
+    }
+
+    .button-row {
+        margin-top: 7px;
+        margin-bottom: 3px;
+    }
+
+        .button-row button {
+            border-radius: 10px;
+            border: none;
+            width: 77px;
+            height: 58px;
+            font-family: Sans-serif;
+            color: #fff;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease-in-out;
+        }
+
+
+
+
+
+
+
+    .post {
+        cursor: pointer;
+        width: 30%;
+        padding: 10px;
+        margin-top: 7px;
+        border: none;
+        border-radius: 11px;
+        font-size: 18px;
+        font-family: Sans-serif;
+        color: #fff;
+        background-size: 200% 100%;
+        background-image: linear-gradient(145deg, #ff00e1, #0000ff, #00d9ff);
+        transition: 0.3s ease-out;
+    }
+
+        .post:hover {
+            background-position: 99%;
+        }
+</style>
+
+
+@using QUIZ_IT.Models
+
+
+@{
+    var user = Session["NguoiDung"] as NguoiDung;
+    var MapData = Model;
+    var cauHoi1 = "";
+    var BaiTracNghiemId = -1;
+    var CauHoiHienTai = 0;
+    if (ViewBag.KhongCoCauHoi == null)
+    {
+
+        foreach (var cauHoi in MapData)
+        {
+            BaiTracNghiemId = cauHoi.Key.BaiTracNghiemId;
+            CauHoiHienTai = cauHoi.Key.Id;
+            cauHoi1 = cauHoi.Key.CauHoi;
+            break;
+        }
+    }
+
+
+}
+
+<input type="hidden" id="CauHoiDauTien" value="@CauHoiHienTai" />
+<input type="hidden" id="nguoiDungId" value="@user.Id" />
+<input type="hidden" id="NoiDungCauHoiDau" value="@cauHoi1" />
+
+<input type="hidden" id="SoLuongCauHoi" value="@ViewBag.SoLuongCauHoi" />
+<div class="text-center my-2" id="pp"></div>
+@if (@ViewBag.KhongCoCauHoi == null)
+{
+    <div class="text-center my-5" id="CauHoi"><strong>@cauHoi1</strong></div>
+    <div id="CumDapAn" class="container col-12" style="width: 100%; display: flex; flex-wrap: wrap;">
+        @foreach (var cauHoi in MapData)
+        {
+
+            foreach (var dapAn in cauHoi.Value)
+            {
+
+                var idCuaDapAn = "DapAn" + dapAn.CauTraLoi;
+
+                <div onclick="ResultChoosen(@CauHoiHienTai, '@cauHoi1', '@dapAn.CauTraLoi')" class="box btn text-white col-9" id="@idCuaDapAn">Đáp Án <br /> <br /><br />@dapAn.CauTraLoi</div>
+
+
+            }
+            break;
+        }
+    </div>
+    <div class="row" style="margin: 0 auto">
+        <div class="col-12">
+            <div style="float: right" class="mx-5 my-2" id="CumButton">
+                <button onclick="CauHoiTruoc()" disabled style="cursor: pointer" class="cta">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z" /></svg>
+                    <span class="hover-underline-animation">  Câu trước </span>
+
+                </button>
+                <button onclick="CauHoiSau(@BaiTracNghiemId, @CauHoiHienTai)" class="cta">
+                    <span class="hover-underline-animation"> Câu sau </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M334.5 414c8.8 3.8 19 2 26-4.6l144-136c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22l0 72L32 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l288 0 0 72c0 9.6 5.7 18.2 14.5 22z" /></svg>
+                </button>
+            </div>
+        </div>
+        <div class="col-12" style="margin: 0 auto;padding-bottom: 200px" id="BoxBinhLuan">
+            <div class="card" style="width: 100%">
+                <div class="search-container">
+                    <svg fill="none" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="#171718" d="M17.5 17.5L22 22"></path>
+                        <path stroke-linejoin="round" stroke-width="2" stroke="#171718" d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z"></path>
+                    </svg>
+                    <input placeholder="Search for a quick action" type="search">
+                </div>
+                <div class="results">
+                    <p class="label"><strong>THẢO LUẬN KẾT QUẢ</strong></p>
+                    @if (user.Vip < 2)
+                    {
+                        <span class="text-center text-danger">Tài khoản Vip 2 mới được xem và sử dụng tính năng này!</span>
+                    }
+                    else
+                    {
+                        <div class="results-list" id="NoiDungBoxBinhLuan">
+
+                        </div>
+                    }
+                    <hr>
+                </div>
+                @if (user.Vip < 2)
+                {
+
+
+                    <div class="post-card">
+                        <textarea id="NoiDungBinhLuan" placeholder="Bình luận...."></textarea>
+                        <hr />
+                        <p class="text-secondary" id="sgv"></p>
+                        <button disabled onclick="DangBinhLuan()" class="btn" style="color: white">Đăng</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="post-card">
+                        <textarea id="NoiDungBinhLuan" placeholder="Bình luận...."></textarea>
+                        <hr />
+                        <p class="text-secondary" id="sgv"></p>
+                        <button onclick="DangBinhLuan()" class="btn" style="color: white">Đăng</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="text-center text-danger my-5"><strong>@ViewBag.KhongCoCauHoi</strong> <a href="/Home/Index">Trang chủ</a></div>
+
+}
+<div class="container-fluid" hidden id="box_KetQua">
+    <div class="col-12" style="display: flex">
+        <div class="col-6 my-5">
+            <div class="results-summary-container">
+                <div class="confetti">
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                </div>
+                <div class="results-summary-container__result">
+                    <div class="heading-tertiary">CHÚC MỪNG BẠN</div>
+                    <div class="result-box">
+                        <div class="heading-primary" id="TongDiem">88</div>
+                        <p class="result">of 100</p>
+                    </div>
+                    <div class="result-text-box">
+                        <div class="heading-secondary" id="LoiKhen"></div>
+                        <p class="paragraph" id="NhanXet">
+
+                        </p>
+                    </div>
+                </div>
+                <div class="results-summary-container__options">
+                    <div class="heading-secondary heading-secondary--blue">Tổng quan</div>
+                    <div class="summary-result-options">
+                        <div class="result-option result-option-reaction">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.833 8.333V2.5l-6.666 9.167h5V17.5l6.666-9.167h-5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#F55"></path>
+                                </svg>
+                                <span class="reaction-icon-text">Reaction</span>
+                            </div>
+                            <div class="result-box"><span>82</span> / 100</div>
+                        </div>
+                        <div class="result-option result-option-memory">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.833 11.667a2.5 2.5 0 1 0 .834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                    <path d="M3.553 13.004a3.333 3.333 0 0 1-.728-5.53m.025-.067a2.083 2.083 0 0 1 2.983-2.824m.199.054A2.083 2.083 0 1 1 10 3.75v12.917a1.667 1.667 0 0 1-3.333 0M10 5.833a2.5 2.5 0 0 0 2.5 2.5m1.667 3.334a2.5 2.5 0 1 1-.834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                    <path d="M16.447 13.004a3.334 3.334 0 0 0 .728-5.53m-.025-.067a2.083 2.083 0 0 0-2.983-2.824M10 3.75a2.085 2.085 0 0 1 2.538-2.033 2.084 2.084 0 0 1 1.43 2.92m-.635 12.03a1.667 1.667 0 0 1-3.333 0" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                </svg>
+                                <span class="memory-icon-text">Memory</span>
+                            </div>
+                            <div class="result-box"><span>94</span> / 100</div>
+                        </div>
+                        <div class="result-option result-option-verbal">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.5 10h5M10 18.333A8.333 8.333 0 1 0 1.667 10c0 1.518.406 2.942 1.115 4.167l-.699 3.75 3.75-.699A8.295 8.295 0 0 0 10 18.333Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#00BB8F"></path>
+                                </svg>
+                                <span class="verbal-icon-text">Verbal</span>
+                            </div>
+                            <div class="result-box"><span>66</span> / 100</div>
+                        </div>
+                        <div class="result-option result-option-Visual">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 11.667a1.667 1.667 0 1 0 0-3.334 1.667 1.667 0 0 0 0 3.334Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                    <path d="M17.5 10c-1.574 2.492-4.402 5-7.5 5s-5.926-2.508-7.5-5C4.416 7.632 6.66 5 10 5s5.584 2.632 7.5 5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                </svg>
+                                <span class="visual-icon-text">Visual</span>
+                            </div>
+                            <div class="result-box"><span>72</span> / 100</div>
+                        </div>
+                        <div class="summary__cta">
+                            <a href="/Home/Index" class="btn btn__continue text-white">Continue</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 my-5">
+            <div class="container-fluid">
+                <div class="container">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Câu</th>
+                                <th scope="col">Câu hỏi</th>
+                                <th scope="col">Đáp án của bạn</th>
+                                <th scope="col">Kết quả</th>
+                                <th scope="col">Số điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ShowKetQuaLamBai">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="myModal" class="modal col-12">
+    <div class="modal-content col-5">
+        <span class="close text-right text-red">&times;</span>
+        Kết thúc bài làm và xem kết quả...
+        <button onclick="KetThucLamBai()" style="margin: 0 auto; border-radius: 5px" class="btn-success col-5">Xem kết quả</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        MapResult.set($('#NoiDungCauHoiDau').val(), "");
+        var renderedNoiDungBoxBinhLuan = '';
+        var myArray = new Array();
+        var url = '/api/BinhLuan?CauHoiId=' + $('#CauHoiDauTien').val();
+        saveCauHoiHienTai = $('#CauHoiDauTien').val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                LoadBinhLuan(saveCauHoiHienTai);
+
+            },
+            error: function (error) {
+                alert('Không thể tải bình luận');
+            }
+        });
+    });
+
+    function LoadSoLike(BinhLuanId) {
+        var url = '/api/DemLike?BinhLuanId=' + BinhLuanId;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                $('#SoLike' + BinhLuanId).html(data + '');
+            },
+            error: function (error) {
+                alert('Hiện đang gặp lỗi, không thể đăng bình luận');
+            }
+        });
+    }
+
+    function LikeAndDislike(id) {
+        var url = '/api/ThichBinhLuan?BinhLuanId=' + id + '&NguoiDungId=' + $('#nguoiDungId').val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                var ChangeIcon = document.getElementById('iconLike' + data.BinhLuanId);
+                var chat = $.connection.chat;
+                loadClient(chat);
+                console.log(chat);
+                $.connection.hub.start().done(function () {
+                    chat.server.message(data.BinhLuan.CauHoiId, data.BinhLuanId);
+                });
+                
+                if (data.DaThich == false) {
+                    ChangeIcon.setAttribute('class', 'fa-regular fa-heart');
+                    ChangeIcon.removeAttribute('style');
+                } else {
+                    ChangeIcon.setAttribute('class', 'fas fa-heart');
+                    ChangeIcon.setAttribute('style', "color: red");
+                }
+            },
+            error: function (error) {
+                alert('Hiện đang gặp lỗi, không thể đăng bình luận');
+            }
+        });
+    }
+
+    function DangBinhLuan() {
+        var NoiDungBinhLuan = document.getElementById('NoiDungBinhLuan');
+        var url = '/api/ThemBinhLuan?noiDung=' + NoiDungBinhLuan.value + '&cauHoiId=' + saveCauHoiHienTai + '&nguoiDungId=' + $('#nguoiDungId').val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                $('#sgv').html('Đang đăng bình luận....');
+                setTimeout(function () {
+                    $('#sgv').html('');
+                    NoiDungBinhLuan.value = '';
+                    var chat = $.connection.chat;
+                    console.log(chat);
+                    loadClient(chat);
+                    $.connection.hub.start().done(function () {
+                        chat.server.message(data.CauHoiId, data.id);
+                    });
+                }, 3000);
+            },
+            error: function (error) {
+                alert('Hiện đang gặp lỗi, không thể đăng bình luận');
+            }
+        });
+    }
+
+   @* $(function () {
+        var chat = $.connection.chat;
+        loadClient(chat);
+        $.connection.hub.start().done(function () {
+            $('#btnSend').click(function () {
+                var msg = $('#txtMessage').val();
+                var name = $('#hName').val();
+                chat.server.message(name, msg);
+                $('#txtMessage').val('').focus();
+            });
+        });
+
+    });*@
+
+    function loadClient(chat) {
+        chat.client.message = function (CauHoiId, BinhLuanId) {
+            LoadBinhLuan(CauHoiId);
+            LoadSoLike(BinhLuanId)
+        }
+    }
+
+    @*function DangBinhLuan() {
+        var NoiDungBinhLuan = document.getElementById('NoiDungBinhLuan');
+        var url = '/api/ThemBinhLuan?noiDung=' + NoiDungBinhLuan.value + '&cauHoiId=' + saveCauHoiHienTai + '&nguoiDungId=' + $('#nguoiDungId').val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                $('#sgv').html('Đang đăng bình luận....');
+                setTimeout(function () {
+
+                    $('#sgv').html('');
+                    NoiDungBinhLuan.value = '';
+                    LoadBinhLuan(data.CauHoiId);
+                }, 3000);
+
+            },
+            error: function (error) {
+                alert('Hiện đang gặp lỗi, không thể đăng bình luận');
+            }
+        });
+    }*@
+
+    function LoadBinhLuan(cauHoiId) {
+        var renderedNoiDungBoxBinhLuan = '';
+        var url = '/api/BinhLuan?CauHoiId=' + cauHoiId;
+        var myArray = new Array();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.length == 0) {
+                    renderedNoiDungBoxBinhLuan += '<span class="text-center">Hãy là người đầu tiên bình luận cho câu hỏi này</span>';
+                } else {
+                    data.forEach(function (item) {
+                        myArray.push(item);
+
+                        var date = new Date(item.ThoiGianDang);
+                        var ThoiGian = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' - ' + date.getHours() + ':' + date.getMinutes();
+                        renderedNoiDungBoxBinhLuan += '<div class="col-12" style="display:flex"> <div class="col-6"><div class="entry"><div class="icon">  <svg xmlns = "http://www.w3.org/2000/svg" height = "1em" viewBox = "0 0 448 512" > <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" /></svg > </div > <div class="desc"><label>' + item.NguoiDung.HoTen + ' ' + ThoiGian + '</label> <span>' + item.NoiDung + '</span></div></div></div>' +
+                            '<div class="col-6"><div class="like-dislike-container"> <div class="tool-box" ></div ><div class="icons-box"> <div class="icons" id="renderBoxIcon' + item.id + '"><label class="btn-label"><span class="like-text-content" id="SoLike' + item.id + '"></span><input class="input-box" id="like-checkbox" type="checkbox" onclick="LikeAndDislike(' + item.id + ')"> ' +
+                            '<i id="iconLike' + item.id + '" class="fa-regular fa-heart"></i>' +
+                            '</label> </div>  </div></div > </div></div>';
+                    });
+                }
+                $('#NoiDungBoxBinhLuan').html(renderedNoiDungBoxBinhLuan);
+                myArray.forEach(function (item) {
+                    var url = '/api/ChiTietBinhLuan?BinhLuanId=' + item.id + '&NguoiDungId=' + $('#nguoiDungId').val();
+                    $.ajax({
+                        url: url,
+                        type: 'Get',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data == null) {
+                                $('#renderBoxIcon' + item.id).html('<label class="btn-label"><span class="like-text-content" id="SoLike' + item.id + '">123</span><input class="input-box" id="like-checkbox" type="checkbox" onclick="LikeAndDislike(' + item.id + ')"> ' +
+                                    '<i id="iconLike' + item.id + '" class="fa-regular fa-heart"></i>' + '</label>');
+                            } else {
+                                if (data.DaThich == false) {
+                                    $('#renderBoxIcon' + item.id).html('<label class="btn-label"><span class="like-text-content" id="SoLike' + item.id + '">123</span><input class="input-box" id="like-checkbox" type="checkbox" onclick="LikeAndDislike(' + item.id + ')"> ' +
+                                        '<i id="iconLike' + item.id + '" class="fa-regular fa-heart"></i>' + '</label>');
+                                } else {
+                                    $('#renderBoxIcon' + item.id).html('<label class="btn-label"><span class="like-text-content" id="SoLike' + item.id + '">123</span><input class="input-box" id="like-checkbox" type="checkbox" onclick="LikeAndDislike(' + item.id + ')"> ' +
+                                        '<i id="iconLike' + item.id + '" class="fas fa-heart" style="color: red"></i>' + '</label>');
+                                }
+                            }
+                            LoadSoLike(item.id);
+                        },
+                        error: function (error) {
+                            alert('asd');
+                        }
+                    })
+
+                });
+            },
+            error: function (error) {
+                alert('Không thể tải bình luận');
+            }
+        });
+    }
+
+    var MapResult = new Map();
+
+    var modal = document.getElementById('myModal');
+    var CauHoiThu = 1;
+    var saveBaiTracNghiemId = -1, saveCauHoiHienTai = -1;
+    var startTime = new Date().getTime();
+    function CauHoiSau(BaiTracNghiemId, CauHoiHienTai) {
+        ++CauHoiThu;
+
+        var SoLuongCauHoi = $('#SoLuongCauHoi').val();
+        if (CauHoiThu > SoLuongCauHoi) {
+            modal.style.display = "block";
+            CauHoiThu = SoLuongCauHoi;
+        } else {
+
+            $('#pp').html('<span class="alert alert-secondary text-center">Đang tải câu hỏi, vui lòng chờ...</span>');
+            var url = '/api/CauHoiTracNghiem/CauHoiSau?BaiTracNghiemId=' + BaiTracNghiemId + '&CauHoiHienTai=' + CauHoiHienTai;
+            $.ajax({
+                url: url,
+                contentType: 'application/json',
+                type: 'GET',
+                success: function (data) {
+                    if (!MapResult.has(data.CauHoi)) {
+                        MapResult.set(data.CauHoi, "");
+                    }
+                    saveBaiTracNghiemId = data.BaiTracNghiemId;
+                    saveCauHoiHienTai = data.Id;
+                    LoadBinhLuan(data.Id);
+                    $('#CauHoi').html('<strong>' + data.CauHoi + '</strong');
+                    var CumDapAnRendered = '';
+                    var CumButtonRendered = ' <button onclick="CauHoiTruoc()" style="cursor: pointer" class="cta"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z" /></svg><span class="hover-underline-animation"> Câu trước </span></button><button onclick="CauHoiSau(' + data.BaiTracNghiemId + ',' + data.Id + ')" class="cta"><span class="hover-underline-animation"> Câu sau </span><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M334.5 414c8.8 3.8 19 2 26-4.6l144-136c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22l0 72L32 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l288 0 0 72c0 9.6 5.7 18.2 14.5 22z" /></svg></button>';
+                    var url = '/api/DapAnTracNghiem?CauHoiTracNghiemId=' + data.Id;
+                    $('#CumButton').html(CumButtonRendered);
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        contentType: 'application/json',
+                        success: function (dsDapAn) {
+
+                            dsDapAn.forEach(function (item) {
+                                if (MapResult.has(data.CauHoi) && item.CauTraLoi == MapResult.get(data.CauHoi)) {
+                                    CumDapAnRendered += '<div onclick="ResultChoosen(' + data.Id + ",'" + data.CauHoi + "', '" + item.CauTraLoi + "'" + ')" class="box ks text-white" id="DapAn' + item.CauTraLoi + '">Đáp Án ' + '<br/> <br/><br/>' + item.CauTraLoi + '</div>';
+                                } else {
+                                    CumDapAnRendered += '<div onclick="ResultChoosen(' + data.Id + ",'" + data.CauHoi + "', '" + item.CauTraLoi + "'" + ')" class="box btn text-white" id="DapAn' + item.CauTraLoi + '">Đáp Án ' + '<br/> <br/><br/>' + item.CauTraLoi + '</div>';
+                                }
+                            });
+                            $('#CumDapAn').html(CumDapAnRendered);
+                            $('#pp').html('');
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                    $('#CumDapAn').html(CumDapAnRendered)
+                },
+                error: function (error) {
+                }
+            });
+        }
+    }
+
+
+    function ResultChoosen(cauHoiId, cauHoi, dapAn) {
+        MapResult.set(cauHoi, dapAn);
+        //alert("CauHoi: " + cauHoiId + ", NoiDung: " + cauHoi + ", DapAn: " + dapAn);
+        var url = '/api/DapAnTracNghiem?CauHoiTracNghiemId=' + cauHoiId;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                data.forEach(function (item) {
+                    //alert(item.CauTraLoi);
+                    var Ele = document.getElementById('DapAn' + item.CauTraLoi);
+                    if (dapAn == item.CauTraLoi) {
+                        Ele.setAttribute('class', 'box ks text-white col-9')
+                    } else {
+                        Ele.setAttribute('class', 'box btn text-white col-9')
+                    }
+                });
+            },
+            error: function (error) {
+
+            }
+        });
+    }
+
+    function CauHoiTruoc() {
+        --CauHoiThu;
+
+        if (CauHoiThu < 1) {
+            CauHoiThu = 1;
+        } else {
+            var url = '/api/CauHoiTracNghiem/CauHoiTruoc?BaiTracNghiemId=' + saveBaiTracNghiemId + '&CauHoiHienTai=' + saveCauHoiHienTai;
+            $.ajax({
+                url: url,
+                contentType: 'application/json',
+                type: 'GET',
+                success: function (data) {
+                    if (!MapResult.has(data.CauHoi)) {
+                        MapResult.set(data.CauHoi, "");
+                    }
+                    $('#pp').html('<span class="alert alert-secondary text-center">Đang tải câu hỏi, vui lòng chờ...</span>');
+                    saveBaiTracNghiemId = data.BaiTracNghiemId;
+                    saveCauHoiHienTai = data.Id;
+                    LoadBinhLuan(data.Id);
+                    $('#CauHoi').html('<strong>' + data.CauHoi + '</strong');
+                    var CumDapAnRendered = '';
+                    var CumButtonRendered = '';
+                    if (CauHoiThu < 1) {
+                        CumButtonRendered = ' <button disabled onclick="CauHoiTruoc()" style="cursor: pointer" class="cta"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z" /></svg><span class="hover-underline-animation"> Câu trước </span></button><button onclick="CauHoiSau(' + data.BaiTracNghiemId + ',' + data.Id + ')" class="cta"><span class="hover-underline-animation"> Câu sau </span><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M334.5 414c8.8 3.8 19 2 26-4.6l144-136c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22l0 72L32 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l288 0 0 72c0 9.6 5.7 18.2 14.5 22z" /></svg></button>';
+                    } else {
+                        CumButtonRendered = ' <button onclick="CauHoiTruoc()" style="cursor: pointer" class="cta"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z" /></svg><span class="hover-underline-animation"> Câu trước </span></button><button onclick="CauHoiSau(' + data.BaiTracNghiemId + ',' + data.Id + ')" class="cta"><span class="hover-underline-animation"> Câu sau </span><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M334.5 414c8.8 3.8 19 2 26-4.6l144-136c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22l0 72L32 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l288 0 0 72c0 9.6 5.7 18.2 14.5 22z" /></svg></button>';
+                    }
+
+                    var url = '/api/DapAnTracNghiem?CauHoiTracNghiemId=' + data.Id;
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        contentType: 'application/json',
+                        success: function (dsDapAn) {
+                            dsDapAn.forEach(function (item) {
+                                if (MapResult.has(data.CauHoi) && item.CauTraLoi == MapResult.get(data.CauHoi)) {
+                                    CumDapAnRendered += '<div onclick="ResultChoosen(' + data.Id + ",'" + data.CauHoi + "', '" + item.CauTraLoi + "'" + ')" class="box ks text-white" id="DapAn' + item.CauTraLoi + '">Đáp Án ' + '<br/> <br/><br/>' + item.CauTraLoi + '</div>';
+                                } else {
+                                    CumDapAnRendered += '<div onclick="ResultChoosen(' + data.Id + ",'" + data.CauHoi + "', '" + item.CauTraLoi + "'" + ')" class="box btn text-white" id="DapAn' + item.CauTraLoi + '">Đáp Án ' + '<br/> <br/><br/>' + item.CauTraLoi + '</div>';
+                                }
+                            });
+                            $('#CumDapAn').html(CumDapAnRendered);
+                            $('#pp').html('');
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                    $('#CumDapAn').html(CumDapAnRendered)
+                    $('#CumButton').html(CumButtonRendered);
+                },
+                error: function (error) {
+                }
+            });
+        }
+    }
+    var closeBtn = document.getElementsByClassName("close")[0];
+    closeBtn.addEventListener('click', function () {
+        var ShowBox = document.getElementById('box_KetQua');
+        var CauHoi = document.getElementById('CauHoi');
+        var CumDapAn = document.getElementById('CumDapAn');
+        var CumButton = document.getElementById('CumButton');
+        ShowBox.setAttribute('hidden', 'hidden');
+        CauHoi.removeAttribute('hidden');
+        CumDapAn.removeAttribute('hidden');
+        CumButton.removeAttribute('hidden');
+        modal.style.display = "none";
+    });
+
+    function KetThucLamBai() {
+        var BoxBinhLuan = document.getElementById('BoxBinhLuan');
+        var ShowBox = document.getElementById('box_KetQua');
+        var CauHoi = document.getElementById('CauHoi');
+        var CumDapAn = document.getElementById('CumDapAn');
+        var CumButton = document.getElementById('CumButton');
+        ShowBox.removeAttribute('hidden');
+        CauHoi.setAttribute('hidden', 'hidden')
+        CumDapAn.setAttribute('hidden', 'hidden')
+        CumButton.setAttribute('hidden', 'hidden')
+        modal.style.display = "none";
+        BoxBinhLuan.setAttribute('hidden', 'hidden')
+        var renderedShowResult = '';
+        var TongDiem = 0;
+        var cc = 1;
+
+        function kiemTraHoanThanh() {
+            $('#TongDiem').html(parseFloat(TongDiem.toFixed(2)));
+            if (parseFloat(TongDiem.toFixed(2)) > 90) {
+                $('#LoiKhen').html('RẤT TỐT');
+                $('#NhanXet').html('Bạn đạt điểm cao hơn 95% số người làm bài kiểm tra này! Xin chúc mừng bạn nhé!');
+            } else if (parseFloat(TongDiem.toFixed(2)) > 60) {
+                $('#LoiKhen').html('TỐT');
+                $('#NhanXet').html('Bạn đạt điểm cao hơn 65% số người làm bài kiểm tra này! Xin chúc mừng bạn nhé!');
+            } else if (parseFloat(TongDiem.toFixed(2)) > 30) {
+                $('#LoiKhen').html('TỆ');
+                $('#NhanXet').html('Bạn đạt điểm cao hơn 20% số người làm bài kiểm tra này! Hãy cố gắn hơn nhé!');
+            }
+            else {
+                $('#LoiKhen').html('RẤT TỆ');
+                $('#NhanXet').html('Bạn đạt điểm cao hơn 0.001% số người làm bài kiểm tra này! Bạn cần cố gắn nhiều hơn!');
+            }
+
+            ++cc;
+            $('#ShowKetQuaLamBai').html(renderedShowResult);
+        }
+
+        var xx = 0;
+
+        MapResult.forEach((value, key) => {
+            var url = '/api/DapAnTracNghiem/KiemTraDapAn?CauHoi=' + key + '&DapAn=' + value;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (KetQua) {
+                    TongDiem += 100 / MapResult.size;
+                    renderedShowResult += '<tr><th scope="row">' + cc + '</th > <td>' + key + '</td> <td>' + (value == "" ? "Chưa chọn đáp án" : value) + '</td><td class="text-success">Đúng</td>  <td>' + (100 / MapResult.size * 1.0) + '</td> </tr>';
+                    kiemTraHoanThanh();
+                },
+                error: function (error) {
+                    renderedShowResult += '<tr><th scope="row">' + cc + '</th > <td>' + key + '</td> <td>' + (value == "" ? "Chưa chọn đáp án" : value) + '</td><td class="text-danger">Sai</td>  <td>0</td> </tr>';
+                    kiemTraHoanThanh();
+                }
+            });
+        });
+    }
+</script>
+@*<script src="https://cdn.tailwindcss.com"></script>*@
+
+
+

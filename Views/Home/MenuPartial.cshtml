@@ -1,0 +1,309 @@
+﻿@{
+    var user = Session["NguoiDung"] as QUIZ_IT.Models.NguoiDung;
+}
+
+<style>
+    .Btn, .ii {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition-duration: .3s;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+        background-color: rgba(245, 73, 144);
+    }
+
+    /* plus sign */
+    .sign {
+        width: 100%;
+        transition-duration: .3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .sign svg {
+            width: 17px;
+        }
+
+            .sign svg path {
+                fill: white;
+            }
+    /* text */
+    .text {
+        position: absolute;
+        right: 0%;
+        width: 0%;
+        opacity: 0;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        transition-duration: .3s;
+    }
+    /* hover effect on button width */
+    .Btn:hover {
+        width: 200px;
+        border-radius: 40px;
+        transition-duration: .3s;
+    }
+
+    .ii:hover {
+        width: 300px;
+        border-radius: 40px;
+        transition-duration: .3s;
+    }
+
+    .Btn:hover .sign, .ii:hover .sign {
+        width: 30%;
+        transition-duration: .3s;
+        padding-left: 20px;
+    }
+        /* hover effect button's text */
+        .Btn:hover .text, .ii:hover .text {
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
+        }
+    /* button click effect*/
+    .Btn:active {
+        transform: translate(2px,2px);
+    }
+
+    @*.button-container {
+        display: flex;
+        /*background-color: rgba(245, 73, 144);*/
+        width: 250px;
+        height: 40px;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 10px;
+        /*box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px, rgba(245, 73, 144, 0.5) 5px 10px 15px;*/
+    }
+
+    .button {
+        outline: 0 !important;
+        border: 0 !important;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        transition: all ease-in-out 0.3s;
+        cursor: pointer;
+    }
+
+        .button:hover {
+            transform: translateY(-3px);
+        }
+
+    .icon {
+        font-size: 20px;
+    }*@
+
+    .loadertr {
+  position: relative;
+  font-size: 16px;
+  width: 5.5em;
+  height: 5.5em;
+}
+
+.loadertr:before {
+  content: '';
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(45deg);
+  height: 100%;
+  width: 4px;
+  background: #fff;
+  left: 50%;
+  top: 50%;
+}
+
+.loadertr:after {
+  content: '';
+  position: absolute;
+  left: 0.2em;
+  bottom: 0.18em;
+  width: 1em;
+  height: 1em;
+  background-color: orange;
+  border-radius: 15%;
+  animation: rollingRock 2.5s cubic-bezier(.79, 0, .47, .97) infinite;
+}
+
+@@keyframes rollingRock {
+  0% {
+    transform: translate(0, -1em) rotate(-45deg)
+  }
+
+  5% {
+    transform: translate(0, -1em) rotate(-50deg)
+  }
+
+  20% {
+    transform: translate(1em, -2em) rotate(47deg)
+  }
+
+  25% {
+    transform: translate(1em, -2em) rotate(45deg)
+  }
+
+  30% {
+    transform: translate(1em, -2em) rotate(40deg)
+  }
+
+  45% {
+    transform: translate(2em, -3em) rotate(137deg)
+  }
+
+  50% {
+    transform: translate(2em, -3em) rotate(135deg)
+  }
+
+  55% {
+    transform: translate(2em, -3em) rotate(130deg)
+  }
+
+  70% {
+    transform: translate(3em, -4em) rotate(217deg)
+  }
+
+  75% {
+    transform: translate(3em, -4em) rotate(220deg)
+  }
+
+  100% {
+    transform: translate(0, -1em) rotate(-225deg)
+  }
+}
+</style>
+<div class="header">
+    <div class="header-inner container">
+        <div class="pull-left">
+            @*<a id="side-panel-trigger" class="mobileHamburgerBtn navbar-btn menu-trigger" onclick="toggleHamburgerMenu()"><span class="bar"></span><span class="bar"></span><span class="bar"></span></a><a class="navbar-brand" href="/Home/Index"><img style="width: 50px; height: auto" src="~/Images/logo.png" alt="MyELT"></a><div class="row side-panel hide">
+
+                </div>*@
+
+            <div class="loadertr"></div>
+
+        </div>
+
+        <div class="pull-right header-right">
+            @if (user != null)
+            {
+                <div class="slogan" style="padding-bottom: 30px">
+                    <button class="ii btn-info">
+                        <div class="sign">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" /></svg>
+                        </div>
+                        <div><span style="color: white"></span></div>
+                        <div class="text">Xin chào, @user.HoTen</div>
+                    </button>
+                </div>
+
+                <div class="slogan">
+                    <button onclick="RedirectToIndex()" class="Btn btn-primary">
+                        <div class="sign">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z" /></svg>
+                        </div>
+                        <div class="text">Trang chủ</div>
+                    </button>
+                </div>
+                if (user.QuyenId != 1)
+                {
+                    <div class="slogan">
+                        <button onclick="RedirectToProPage()" class="Btn btn-success">
+                            <div class="sign">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M528 448H112c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm64-320c-26.5 0-48 21.5-48 48 0 7.1 1.6 13.7 4.4 19.8L476 239.2c-15.4 9.2-35.3 4-44.2-11.6L350.3 85C361 76.2 368 63 368 48c0-26.5-21.5-48-48-48s-48 21.5-48 48c0 15 7 28.2 17.7 37l-81.5 142.6c-8.9 15.6-28.9 20.8-44.2 11.6l-72.3-43.4c2.7-6 4.4-12.7 4.4-19.8 0-26.5-21.5-48-48-48S0 149.5 0 176s21.5 48 48 48c2.6 0 5.2-.4 7.7-.8L128 416h384l72.3-192.8c2.5.4 5.1.8 7.7.8 26.5 0 48-21.5 48-48s-21.5-48-48-48z" /></svg>
+                            </div>
+                            <div class="text">Tài khoản Pro</div>
+                        </button>
+                    </div>
+                }
+                if (user.QuyenId == 1)
+                {
+                    <div class="slogan">
+                        <button onclick="RedirectToAdminPage()" class="Btn btn-secondary">
+                            <div class="sign"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M610.5 373.3c2.6-14.1 2.6-28.5 0-42.6l25.8-14.9c3-1.7 4.3-5.2 3.3-8.5-6.7-21.6-18.2-41.2-33.2-57.4-2.3-2.5-6-3.1-9-1.4l-25.8 14.9c-10.9-9.3-23.4-16.5-36.9-21.3v-29.8c0-3.4-2.4-6.4-5.7-7.1-22.3-5-45-4.8-66.2 0-3.3.7-5.7 3.7-5.7 7.1v29.8c-13.5 4.8-26 12-36.9 21.3l-25.8-14.9c-2.9-1.7-6.7-1.1-9 1.4-15 16.2-26.5 35.8-33.2 57.4-1 3.3.4 6.8 3.3 8.5l25.8 14.9c-2.6 14.1-2.6 28.5 0 42.6l-25.8 14.9c-3 1.7-4.3 5.2-3.3 8.5 6.7 21.6 18.2 41.1 33.2 57.4 2.3 2.5 6 3.1 9 1.4l25.8-14.9c10.9 9.3 23.4 16.5 36.9 21.3v29.8c0 3.4 2.4 6.4 5.7 7.1 22.3 5 45 4.8 66.2 0 3.3-.7 5.7-3.7 5.7-7.1v-29.8c13.5-4.8 26-12 36.9-21.3l25.8 14.9c2.9 1.7 6.7 1.1 9-1.4 15-16.2 26.5-35.8 33.2-57.4 1-3.3-.4-6.8-3.3-8.5l-25.8-14.9zM496 400.5c-26.8 0-48.5-21.8-48.5-48.5s21.8-48.5 48.5-48.5 48.5 21.8 48.5 48.5-21.7 48.5-48.5 48.5zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm201.2 226.5c-2.3-1.2-4.6-2.6-6.8-3.9l-7.9 4.6c-6 3.4-12.8 5.3-19.6 5.3-10.9 0-21.4-4.6-28.9-12.6-18.3-19.8-32.3-43.9-40.2-69.6-5.5-17.7 1.9-36.4 17.9-45.7l7.9-4.6c-.1-2.6-.1-5.2 0-7.8l-7.9-4.6c-16-9.2-23.4-28-17.9-45.7.9-2.9 2.2-5.8 3.2-8.7-3.8-.3-7.5-1.2-11.4-1.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c10.1 0 19.5-3.2 27.2-8.5-1.2-3.8-2-7.7-2-11.8v-9.2z" /></svg></div>
+                            <div class="text">Quản trị</div>
+                        </button>
+                    </div>
+                }
+                <div class="slogan">
+                    <button onclick="ChangePassword()" class="Btn btn-warning">
+                        <div class="sign"><i class="fas fa-key" style="color: white"></i></div>
+                        <div class="text">Đổi mật khẩu</div>
+                    </button>
+                </div>
+
+
+                <div class="slogan">
+                    <button onclick="logout()" class="Btn btn-danger">
+                        <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                        <div class="text">Đăng xuất</div>
+                    </button>
+                </div>
+            }
+            @if (user == null)
+            {
+                <div class="slogan">
+                    <div class="logoutDiv">
+                        <button onclick="RedirectRegister()" style="font-size: 15px" type="button" class="btn btn-primary">Đăng Ký <i class="fas fa-user-plus" style="color: #ffffff;"></i></button>
+                    </div>
+                </div>
+                <div class="slogan">
+                    <div class="logoutDiv">
+                        <button onclick="login()" style="font-size: 15px" type="button" class="btn btn-success">Đăng Nhập <i class="far fa-hand-pointer" style="color: #f5f5f5;"></i></button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+
+    function RedirectToProPage() {
+        window.location.href = '/NguoiDung/Pro';
+    }
+
+    function RedirectToIndex() {
+        window.location.href = '/Home/Index';
+    }
+
+    function RedirectToAdminPage() {
+        window.location.href = '/Admin/Admin/Index';
+    }
+
+    function RedirectRegister() {
+        window.location.href = '/NguoiDung/DangKy';
+    }
+
+    function ChangePassword() {
+        window.location.href = '/NguoiDung/DoiMatKhau';
+    }
+    function login() {
+        window.location.href = '/NguoiDung/DangNhap';
+    }
+    function logout() {
+       $.ajax({
+                type: "GET",
+                url: "@Url.Action("DangXuat", "NguoiDung")",
+                success: function (data) {
+                     window.location.href = '/NguoiDung/DangNhap';
+                },
+                error: function () {
+                    alert("Đăng ký không thành công.");
+                }
+            });
+    }
+</script>
+

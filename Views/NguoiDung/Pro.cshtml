@@ -1,0 +1,827 @@
+﻿
+@{
+    ViewBag.Title = "Gói nâng cấp - Trắc nghiệm IT";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+@{
+    var user = Session["NguoiDung"] as QUIZ_IT.Models.NguoiDung;
+}
+
+<style>
+    .main__heading {
+        font-weight: 600;
+        font-size: 2.25em;
+        margin-bottom: 0.75em;
+        text-align: center;
+        color: #eceff1;
+    }
+
+    .cards {
+        position: relative;
+    }
+
+    .card {
+        --flow-space: 0.5em;
+        --hsl: var(--hue), var(--saturation), var(--lightness);
+        flex: 1 1 14rem;
+        padding: 1.5em 2em;
+        display: grid;
+        grid-template-rows: auto auto auto 1fr;
+        align-items: start;
+        gap: 1.25em;
+        color: #eceff1;
+        background-color: #2b2b2b;
+        border: 1px solid #eceff133;
+        border-radius: 15px;
+    }
+
+        .card:nth-child(1) {
+            --hue: 165;
+            --saturation: 82.26%;
+            --lightness: 51.37%;
+        }
+
+    .card__bullets {
+        line-height: 1.4;
+    }
+
+    .card__heading {
+        font-size: 1.05em;
+        font-weight: 600;
+    }
+
+    .card__price {
+        font-size: 1.75em;
+        font-weight: 700;
+    }
+
+    .flow > * + * {
+        margin-top: var(--flow-space, 1.25em);
+    }
+
+    .cta {
+        display: block;
+        align-self: end;
+        margin: 1em 0 0.5em 0;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: transparent;
+        outline: 1px solid white;
+        padding: 0.7em;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .card:hover {
+        --lightness: 80%;
+        background: #ffffff80;
+        color: #000;
+        outline: 1px solid rgb(255, 255, 255);
+        box-shadow: inset 0 0 80px whitesmoke, inset 20px 0 80px rgba(255, 0, 255, 0.747), inset -20px 0 80px #0ff, inset 20px 0 300px #f0f, inset -20px 0 300px #0ff, 0 0 50px #fff, -10px 0 80px #f0f, 10px 0 80px #0ff;
+        transition: all ease-in-out 0.3s;
+    }
+
+        .card:hover > .cta {
+            outline: none;
+            background-color: #0d0d0d;
+        }
+
+
+
+    .results-summary-container {
+        font-family: "Hanken Grotesk", sans-serif;
+        display: flex;
+        width: 550px;
+        gap: 10px;
+        border-radius: 30px;
+        box-shadow: 10px 10px 30px rgba(120, 87, 255, 0.3);
+        backface-visibility: hidden;
+    }
+
+    .heading-primary,
+    .heading-secondary,
+    .heading-tertiary {
+        color: #ffffff;
+        text-transform: capitalize;
+        margin-bottom: 15px;
+        margin-top: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .heading-primary {
+        font-size: 46px;
+        font-weight: 700;
+        background-image: linear-gradient(to right, #f7bb97, #dd5e89);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transform: scale(1.4);
+    }
+
+    .heading-secondary {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 20px;
+        letter-spacing: 1px;
+    }
+
+    .heading-secondary--blue {
+        color: hsl(224, 30%, 27%);
+    }
+
+    .heading-tertiary {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 20px;
+        color: hsl(221, 100%, 96%);
+    }
+
+    .paragraph {
+        font-size: 17px;
+        line-height: 1.6;
+        color: hsl(221, 100%, 96%);
+        margin-bottom: 15px;
+    }
+
+    .paragraph-text-box {
+        width: 100%;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .margin-1 {
+        margin-bottom: 10px;
+    }
+
+    .results-summary-container__result {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 5px;
+        border-radius: 30px 10px;
+        background-image: linear-gradient(to bottom, #aa076b, #61045f);
+        animation: gradient 10s linear infinite;
+    }
+
+    .results-summary-container__options {
+        padding: 10px;
+    }
+
+    .summary-result-options {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .result-option {
+        width: 210px;
+        height: 36px;
+        background-color: hsl(0, 100%, 95%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .result-option-memory {
+        background-color: hsl(39, 100%, 95%);
+    }
+
+    .result-option-verbal {
+        background-color: hsl(166, 100%, 95%);
+    }
+
+    .result-option-Visual {
+        background-color: hsl(234, 85%, 95%);
+    }
+
+    .icon-box {
+        display: flex;
+        font-size: 14px;
+        align-items: center;
+        gap: 1px;
+    }
+
+    .reaction-icon-text {
+        color: hsl(0, 100%, 67%);
+    }
+
+    .memory-icon-text {
+        color: hsl(39, 100%, 56%);
+    }
+
+    .verbal-icon-text {
+        color: hsl(166, 100%, 37%);
+    }
+
+    .visual-icon-text {
+        color: hsl(234, 85%, 45%);
+    }
+
+    .result-box {
+        font-size: 14px;
+        color: hsl(241, 100%, 89%);
+        font-weight: 700;
+    }
+
+        .result-box span {
+            font-size: 14px;
+            color: hsl(224, 30%, 27%);
+        }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        color: #ffffff;
+        background-image: linear-gradient(to right, #aa076b, #61045f);
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        animation: background 10s linear infinite;
+    }
+
+        .btn:hover {
+            transform: translateY(5px);
+            background-image: linear-gradient(to left, #aa076b, #61045f);
+        }
+
+    .icon {
+        cursor: pointer;
+        filter: grayscale(1);
+        transition: 0.3s linear;
+    }
+
+        .icon:hover {
+            filter: grayscale(0);
+        }
+
+    @@keyframes background {
+        0% {
+            background-image: linear-gradient(to right, #aa076b, #61045f);
+        }
+
+        50% {
+            background-image: linear-gradient(to right, #aa076b, #61045f);
+        }
+
+        100% {
+            background-image: linear-gradient(to right, #ef629f, #42275a);
+        }
+    }
+
+    @@keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+            background-image: linear-gradient(-45deg, #ef629f, #42275a);
+        }
+
+        50% {
+            background-position: 100% 50%;
+            background-image: linear-gradient(to bottom, #aa076b, #61045f);
+        }
+
+        100% {
+            background-position: 0% 50%;
+            background-image: linear-gradient(to top, #ef629f, #42275a);
+        }
+    }
+
+    .confetti {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: 240px;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1000;
+    }
+
+    .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 20px;
+        background-color: hsl(39, 100%, 56%);
+        top: 0;
+        opacity: 0;
+        animation: makeItRain 3000ms infinite linear;
+    }
+
+        .confetti-piece:nth-child(1) {
+            left: 7%;
+            transform: rotate(-10deg);
+            animation-delay: 182ms;
+            animation-duration: 2000ms;
+        }
+
+        .confetti-piece:nth-child(2) {
+            left: 14%;
+            transform: rotate(20deg);
+            animation-delay: 161ms;
+            animation-duration: 2076ms;
+        }
+
+        .confetti-piece:nth-child(3) {
+            left: 21%;
+            transform: rotate(-51deg);
+            animation-delay: 481ms;
+            animation-duration: 2103ms;
+        }
+
+        .confetti-piece:nth-child(4) {
+            left: 28%;
+            transform: rotate(61deg);
+            animation-delay: 334ms;
+            animation-duration: 1008ms;
+        }
+
+        .confetti-piece:nth-child(5) {
+            left: 35%;
+            transform: rotate(-52deg);
+            animation-delay: 302ms;
+            animation-duration: 1776ms;
+        }
+
+        .confetti-piece:nth-child(6) {
+            left: 42%;
+            transform: rotate(38deg);
+            animation-delay: 180ms;
+            animation-duration: 1168ms;
+        }
+
+        .confetti-piece:nth-child(7) {
+            left: 49%;
+            transform: rotate(11deg);
+            animation-delay: 395ms;
+            animation-duration: 1200ms;
+        }
+
+        .confetti-piece:nth-child(8) {
+            left: 56%;
+            transform: rotate(49deg);
+            animation-delay: 14ms;
+            animation-duration: 1887ms;
+        }
+
+        .confetti-piece:nth-child(9) {
+            left: 63%;
+            transform: rotate(-72deg);
+            animation-delay: 149ms;
+            animation-duration: 1805ms;
+        }
+
+        .confetti-piece:nth-child(10) {
+            left: 70%;
+            transform: rotate(10deg);
+            animation-delay: 351ms;
+            animation-duration: 2059ms;
+        }
+
+        .confetti-piece:nth-child(11) {
+            left: 77%;
+            transform: rotate(4deg);
+            animation-delay: 307ms;
+            animation-duration: 1132ms;
+        }
+
+        .confetti-piece:nth-child(12) {
+            left: 84%;
+            transform: rotate(42deg);
+            animation-delay: 464ms;
+            animation-duration: 1776ms;
+        }
+
+        .confetti-piece:nth-child(13) {
+            left: 91%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 1818ms;
+        }
+
+        .confetti-piece:nth-child(14) {
+            left: 94%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 818ms;
+        }
+
+        .confetti-piece:nth-child(15) {
+            left: 96%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 2818ms;
+        }
+
+        .confetti-piece:nth-child(16) {
+            left: 98%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 2818ms;
+        }
+
+        .confetti-piece:nth-child(17) {
+            left: 50%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 2818ms;
+        }
+
+        .confetti-piece:nth-child(18) {
+            left: 60%;
+            transform: rotate(-72deg);
+            animation-delay: 429ms;
+            animation-duration: 1818ms;
+        }
+
+        .confetti-piece:nth-child(odd) {
+            background-color: hsl(0, 100%, 67%);
+        }
+
+        .confetti-piece:nth-child(even) {
+            z-index: 1;
+        }
+
+        .confetti-piece:nth-child(4n) {
+            width: 6px;
+            height: 14px;
+            animation-duration: 4000ms;
+            background-color: #c33764;
+        }
+
+        .confetti-piece:nth-child(5n) {
+            width: 3px;
+            height: 10px;
+            animation-duration: 4000ms;
+            background-color: #b06ab3;
+        }
+
+        .confetti-piece:nth-child(3n) {
+            width: 4px;
+            height: 12px;
+            animation-duration: 2500ms;
+            animation-delay: 3000ms;
+            background-color: #dd2476;
+        }
+
+        .confetti-piece:nth-child(3n-7) {
+            background-color: hsl(166, 100%, 37%);
+        }
+
+    @@keyframes makeItRain {
+        from {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        to {
+            transform: translateY(250px);
+        }
+    }
+</style>
+
+<div class="container m-5">
+    <div class="container-fluid" style="display: flex;">
+        @if (user.Vip == 0 || user.Vip == null)
+        {
+            <div class="col-6 m-4">
+
+                <div class="cards__inner">
+                    <div class="cards__card card">
+                        <p class="card__heading">Gói Cơ Bản</p>
+                        <p class="card__price">$1/tháng</p>
+                        <ul class="card_bullets flow" role="list">
+                            <li>Tham gia lớp học 2 buổi / tuần (19h - 20h)</li>
+                            <li>Được giải đáp các câu hỏi trên website</li>
+                        </ul>
+                        <a onclick="RedirectToBasePacket()" class="card__cta cta" style="cursor: pointer;text-decoration: none; color: white;">NÂNG CẤP</a>
+                    </div>
+                    <div class="overlay cards__inner"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="results-summary-container">
+                    <div class="confetti">
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                    </div>
+                    <div class="results-summary-container__result">
+                        <div class="heading-tertiary">Gói Vip Pro</div>
+                        <div class="result-box">
+                            <div class="heading-primary"><i class="fas fa-chess-queen"></i></div>
+                            <p class="result"></p>
+                        </div>
+                        <div class="result-text-box">
+                            <div class="heading-secondary">$5/tháng</div>
+                            <p class="paragraph">
+                                Bạn sẽ sử dụng được tất cả chức năng hiện có của trang
+                            </p>
+                        </div>
+                    </div>
+                    <div class="results-summary-container__options">
+                        <div class="heading-secondary heading-secondary--blue">TÓM TẮT</div>
+                        <div class="summary-result-options">
+                            <div class="result-option result-option-reaction">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.833 8.333V2.5l-6.666 9.167h5V17.5l6.666-9.167h-5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#F55"></path>
+                                    </svg>
+                                    <span class="reaction-icon-text">Bao gồm gói cơ bản</span>
+                                </div>
+                                @*<div class="result-box"><span>82</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-memory">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.833 11.667a2.5 2.5 0 1 0 .834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M3.553 13.004a3.333 3.333 0 0 1-.728-5.53m.025-.067a2.083 2.083 0 0 1 2.983-2.824m.199.054A2.083 2.083 0 1 1 10 3.75v12.917a1.667 1.667 0 0 1-3.333 0M10 5.833a2.5 2.5 0 0 0 2.5 2.5m1.667 3.334a2.5 2.5 0 1 1-.834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M16.447 13.004a3.334 3.334 0 0 0 .728-5.53m-.025-.067a2.083 2.083 0 0 0-2.983-2.824M10 3.75a2.085 2.085 0 0 1 2.538-2.033 2.084 2.084 0 0 1 1.43 2.92m-.635 12.03a1.667 1.667 0 0 1-3.333 0" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                    </svg>
+                                    <span class="memory-icon-text">Gợi ý cho người khác</span>
+                                </div>
+                                @*<div class="result-box"><span>94</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-verbal">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.5 10h5M10 18.333A8.333 8.333 0 1 0 1.667 10c0 1.518.406 2.942 1.115 4.167l-.699 3.75 3.75-.699A8.295 8.295 0 0 0 10 18.333Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#00BB8F"></path>
+                                    </svg>
+                                    <span class="verbal-icon-text">Bình luận, đăng bài,...</span>
+                                </div>
+                                @*<div class="result-box"><span>66</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-Visual">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 11.667a1.667 1.667 0 1 0 0-3.334 1.667 1.667 0 0 0 0 3.334Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                        <path d="M17.5 10c-1.574 2.492-4.402 5-7.5 5s-5.926-2.508-7.5-5C4.416 7.632 6.66 5 10 5s5.584 2.632 7.5 5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                    </svg>
+                                    <span class="visual-icon-text">Xem đáp án</span>
+                                </div>
+                                @* <div class="result-box"><span>72</span> / 100</div>*@
+                            </div>
+                            <div class="summary__cta">
+                                <button class="btn btn__continue" onclick="RedirectToVipPacket()">NÂNG CẤP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (user.Vip == 1)
+        {
+            <div class="col-6 m-4">
+                <div class="cards__inner">
+                    <div class="cards__card card">
+                        <p class="card__heading">Gói Cơ Bản</p>
+                        <i class="fa fa-check-circle text-right text-success"></i>
+                        <p class="card__price">$1/tháng</p>
+                        <ul class="card_bullets flow" role="list">
+                            <li>Tham gia lớp học 2 buổi / tuần (19h - 20h)</li>
+                            <li>Được giải đáp các câu hỏi trên website</li>
+                        </ul>
+                        <a disabled class="card__cta cta" style="pointer-events: none; cursor: pointer; text-decoration: none; color: white;">NÂNG CẤP</a>
+                    </div>
+                    <div class="overlay cards__inner"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="results-summary-container">
+                    <div class="confetti">
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                    </div>
+                    <div class="results-summary-container__result">
+                        <div class="heading-tertiary">Gói Vip Pro</div>
+                        <div class="result-box">
+                            <div class="heading-primary"><i class="fas fa-chess-queen"></i></div>
+                            <p class="result"></p>
+                        </div>
+                        <div class="result-text-box">
+                            <div class="heading-secondary">$5/tháng</div>
+                            <p class="paragraph">
+                                Bạn sẽ sử dụng được tất cả chức năng hiện có của trang
+                            </p>
+                        </div>
+                    </div>
+                    <div class="results-summary-container__options">
+                        <div class="heading-secondary heading-secondary--blue">TÓM TẮT</div>
+                        <div class="summary-result-options">
+                            <div class="result-option result-option-reaction">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.833 8.333V2.5l-6.666 9.167h5V17.5l6.666-9.167h-5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#F55"></path>
+                                    </svg>
+                                    <span class="reaction-icon-text">Bao gồm gói cơ bản</span>
+                                </div>
+                                @*<div class="result-box"><span>82</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-memory">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.833 11.667a2.5 2.5 0 1 0 .834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M3.553 13.004a3.333 3.333 0 0 1-.728-5.53m.025-.067a2.083 2.083 0 0 1 2.983-2.824m.199.054A2.083 2.083 0 1 1 10 3.75v12.917a1.667 1.667 0 0 1-3.333 0M10 5.833a2.5 2.5 0 0 0 2.5 2.5m1.667 3.334a2.5 2.5 0 1 1-.834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M16.447 13.004a3.334 3.334 0 0 0 .728-5.53m-.025-.067a2.083 2.083 0 0 0-2.983-2.824M10 3.75a2.085 2.085 0 0 1 2.538-2.033 2.084 2.084 0 0 1 1.43 2.92m-.635 12.03a1.667 1.667 0 0 1-3.333 0" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                    </svg>
+                                    <span class="memory-icon-text">Gợi ý cho người khác</span>
+                                </div>
+                                @*<div class="result-box"><span>94</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-verbal">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.5 10h5M10 18.333A8.333 8.333 0 1 0 1.667 10c0 1.518.406 2.942 1.115 4.167l-.699 3.75 3.75-.699A8.295 8.295 0 0 0 10 18.333Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#00BB8F"></path>
+                                    </svg>
+                                    <span class="verbal-icon-text">Bình luận, đăng bài,...</span>
+                                </div>
+                                @*<div class="result-box"><span>66</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-Visual">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 11.667a1.667 1.667 0 1 0 0-3.334 1.667 1.667 0 0 0 0 3.334Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                        <path d="M17.5 10c-1.574 2.492-4.402 5-7.5 5s-5.926-2.508-7.5-5C4.416 7.632 6.66 5 10 5s5.584 2.632 7.5 5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                    </svg>
+                                    <span class="visual-icon-text">Xem đáp án</span>
+                                </div>
+                                @* <div class="result-box"><span>72</span> / 100</div>*@
+                            </div>
+                            <div class="summary__cta">
+                                <button class="btn btn__continue" onclick="RedirectToVipPacket()">NÂNG CẤP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (user.Vip == 2)
+        {
+            <div class="col-6 m-4">
+                <div class="cards__inner">
+                    <div class="cards__card card">
+                        <p class="card__heading">Gói Cơ Bản</p>
+                        <i class="fa fa-check-circle text-right text-success"></i>
+                        <p class="card__price">$1/tháng</p>
+                        <ul class="card_bullets flow" role="list">
+                            <li>Tham gia lớp học 2 buổi / tuần (19h - 20h)</li>
+                            <li>Được giải đáp các câu hỏi trên website</li>
+                        </ul>
+                        <a disabled class="card__cta cta" style="pointer-events: none; cursor: pointer; text-decoration: none; color: white;">NÂNG CẤP</a>
+                    </div>
+                    <div class="overlay cards__inner"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="results-summary-container">
+                    <div class="confetti">
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                        <div class="confetti-piece"></div>
+                    </div>
+                    <div class="results-summary-container__result">
+                        <div class="heading-tertiary">Gói Vip Pro</div>
+                        <div class="result-box">
+                            <div class="heading-primary"><i class="fas fa-chess-queen"></i></div>
+                            <p class="result"></p>
+                        </div>
+                        <div class="result-text-box">
+                            <div class="heading-secondary">$5/tháng</div>
+                            <p class="paragraph">
+                                Bạn sẽ sử dụng được tất cả chức năng hiện có của trang
+                            </p>
+                        </div>
+                    </div>
+                    <div class="results-summary-container__options">
+                        <div class="heading-secondary heading-secondary--blue">TÓM TẮT  <i class="fa fa-check-circle text-right text-success"></i></div>
+                       
+                        <div class="summary-result-options">
+                            <div class="result-option result-option-reaction">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.833 8.333V2.5l-6.666 9.167h5V17.5l6.666-9.167h-5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#F55"></path>
+                                    </svg>
+                                    <span class="reaction-icon-text">Bao gồm gói cơ bản</span>
+                                </div>
+                                @*<div class="result-box"><span>82</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-memory">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.833 11.667a2.5 2.5 0 1 0 .834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M3.553 13.004a3.333 3.333 0 0 1-.728-5.53m.025-.067a2.083 2.083 0 0 1 2.983-2.824m.199.054A2.083 2.083 0 1 1 10 3.75v12.917a1.667 1.667 0 0 1-3.333 0M10 5.833a2.5 2.5 0 0 0 2.5 2.5m1.667 3.334a2.5 2.5 0 1 1-.834 4.858" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                        <path d="M16.447 13.004a3.334 3.334 0 0 0 .728-5.53m-.025-.067a2.083 2.083 0 0 0-2.983-2.824M10 3.75a2.085 2.085 0 0 1 2.538-2.033 2.084 2.084 0 0 1 1.43 2.92m-.635 12.03a1.667 1.667 0 0 1-3.333 0" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#FFB21E"></path>
+                                    </svg>
+                                    <span class="memory-icon-text">Gợi ý cho người khác</span>
+                                </div>
+                                @*<div class="result-box"><span>94</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-verbal">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.5 10h5M10 18.333A8.333 8.333 0 1 0 1.667 10c0 1.518.406 2.942 1.115 4.167l-.699 3.75 3.75-.699A8.295 8.295 0 0 0 10 18.333Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#00BB8F"></path>
+                                    </svg>
+                                    <span class="verbal-icon-text">Bình luận, đăng bài,...</span>
+                                </div>
+                                @*<div class="result-box"><span>66</span> / 100</div>*@
+                            </div>
+                            <div class="result-option result-option-Visual">
+                                <div class="icon-box">
+                                    <svg viewBox="0 0 20 20" fill="none" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 11.667a1.667 1.667 0 1 0 0-3.334 1.667 1.667 0 0 0 0 3.334Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                        <path d="M17.5 10c-1.574 2.492-4.402 5-7.5 5s-5.926-2.508-7.5-5C4.416 7.632 6.66 5 10 5s5.584 2.632 7.5 5Z" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" stroke="#1125D6"></path>
+                                    </svg>
+                                    <span class="visual-icon-text">Xem đáp án</span>
+                                </div>
+                                @* <div class="result-box"><span>72</span> / 100</div>*@
+                            </div>
+                            <div class="summary__cta">
+                                <button disabled class="btn btn__continue" onclick="RedirectToVipPacket()">NÂNG CẤP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        }
+
+
+
+    </div>
+</div>
+<script>
+    function RedirectToBasePacket() {
+        window.location.href = '/NguoiDung/NangCapCoBan';
+    }
+
+    function RedirectToVipPacket() {
+        window.location.href = '/NguoiDung/NangCapVipPro';
+    }
+</script>
+

@@ -1,0 +1,321 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập - Trắc nghiệm IT";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<style>
+    .social-message {
+        display: flex;
+        align-items: center;
+        padding-top: 1rem;
+    }
+
+    .line {
+        height: 1px;
+        flex: 1 1 0%;
+        background-color: rgba(55, 65, 81, 1);
+    }
+
+    .social-message .message {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 17px;
+        line-height: 1.25rem;
+        color: rgba(156, 163, 175, 1);
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+    }
+
+        .social-icons .icon {
+            border-radius: 0.125rem;
+            padding: 0.75rem;
+            border: none;
+            background-color: transparent;
+            margin-left: 8px;
+        }
+
+            .social-icons .icon svg {
+                height: 1.25rem;
+                width: 1.25rem;
+                fill: #fff;
+            }
+
+    .signup {
+        text-align: center;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        color: rgba(156, 163, 175, 1);
+    }
+
+
+    .login-box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 400px;
+        padding: 40px;
+        margin: 20px auto;
+        transform: translate(-50%, -55%);
+        background: rgba(0,0,0,.9);
+        box-sizing: border-box;
+        box-shadow: 0 15px 25px rgba(0,0,0,.6);
+        border-radius: 10px;
+    }
+
+        .login-box p:first-child {
+            margin: 0 0 30px;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .login-box .user-box {
+            position: relative;
+        }
+
+            .login-box .user-box input {
+                width: 100%;
+                padding: 10px 0;
+                font-size: 16px;
+                color: #fff;
+                margin-bottom: 30px;
+                border: none;
+                border-bottom: 1px solid #fff;
+                outline: none;
+                background: transparent;
+            }
+
+            .login-box .user-box label {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px 0;
+                font-size: 16px;
+                color: #fff;
+                pointer-events: none;
+                transition: .5s;
+            }
+
+            .login-box .user-box input:focus ~ label,
+            .login-box .user-box input:valid ~ label {
+                top: -20px;
+                left: 0;
+                color: #fff;
+                font-size: 12px;
+            }
+
+        .login-box form a {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: .5s;
+            margin-top: 40px;
+            letter-spacing: 3px
+        }
+
+        .login-box a:hover {
+            background: #fff;
+            color: #272727;
+            border-radius: 5px;
+        }
+
+        .login-box a span {
+            position: absolute;
+            display: block;
+        }
+
+            .login-box a span:nth-child(1) {
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #fff);
+                animation: btn-anim1 1.5s linear infinite;
+            }
+
+    @@keyframes btn-anim1 {
+        0% {
+            left: -100%;
+        }
+
+        50%, 100% {
+            left: 100%;
+        }
+    }
+
+    .login-box a span:nth-child(2) {
+        top: -100%;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, #fff);
+        animation: btn-anim2 1.5s linear infinite;
+        animation-delay: .375s
+    }
+
+    @@keyframes btn-anim2 {
+        0% {
+            top: -100%;
+        }
+
+        50%, 100% {
+            top: 100%;
+        }
+    }
+
+    .login-box a span:nth-child(3) {
+        bottom: 0;
+        right: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(270deg, transparent, #fff);
+        animation: btn-anim3 1.5s linear infinite;
+        animation-delay: .75s
+    }
+
+    @@keyframes btn-anim3 {
+        0% {
+            right: -100%;
+        }
+
+        50%, 100% {
+            right: 100%;
+        }
+    }
+
+    .login-box a span:nth-child(4) {
+        bottom: -100%;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(360deg, transparent, #fff);
+        animation: btn-anim4 1.5s linear infinite;
+        animation-delay: 1.125s
+    }
+
+    @@keyframes btn-anim4 {
+        0% {
+            bottom: -100%;
+        }
+
+        50%, 100% {
+            bottom: 100%;
+        }
+    }
+
+    .login-box p:last-child {
+        color: #aaa;
+        font-size: 14px;
+    }
+
+    .login-box a.a2 {
+        color: #fff;
+        text-decoration: none;
+    }
+
+        .login-box a.a2:hover {
+            background: transparent;
+            color: #aaa;
+            border-radius: 5px;
+        }
+</style>
+
+<div class="login-box my-5">
+    <div id="message" class="text-center"></div>
+    <p><h2 class="text-white my-3">ĐĂNG NHẬP</h2></p>
+    <form>
+        <div class="user-box">
+            <input required="" id="TenDangNhap" name="TenDangNhap" type="text">
+            <label>Tên đăng nhập</label>
+        </div>
+        <div class="user-box">
+            <input onkeydown="handleKeyPress(event)" required="" id="MatKhau" name="MatKhau" type="password">
+            <label>Mật khẩu</label>
+        </div>
+
+        <a style="cursor: pointer" onclick="Login();">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            ĐĂNG NHẬP
+        </a>
+    </form>
+    <div class="social-message">
+        <div class="line"></div>
+        <p class="message">ĐĂNG NHẬP BẰNG CÁCH KHÁC</p>
+        <div class="line"></div>
+    </div>
+    <div class="social-icons">
+        <button aria-label="Log in with Google" class="icon" onclick="LoginWithGoogle('@ViewBag.UrlLoginWithGoogle')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5 fill-current">
+                <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z"></path>
+            </svg>
+        </button>
+        <button aria-label="Log in with Twitter" class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5 fill-current">
+                <path d="M31.937 6.093c-1.177 0.516-2.437 0.871-3.765 1.032 1.355-0.813 2.391-2.099 2.885-3.631-1.271 0.74-2.677 1.276-4.172 1.579-1.192-1.276-2.896-2.079-4.787-2.079-3.625 0-6.563 2.937-6.563 6.557 0 0.521 0.063 1.021 0.172 1.495-5.453-0.255-10.287-2.875-13.52-6.833-0.568 0.964-0.891 2.084-0.891 3.303 0 2.281 1.161 4.281 2.916 5.457-1.073-0.031-2.083-0.328-2.968-0.817v0.079c0 3.181 2.26 5.833 5.26 6.437-0.547 0.145-1.131 0.229-1.724 0.229-0.421 0-0.823-0.041-1.224-0.115 0.844 2.604 3.26 4.5 6.14 4.557-2.239 1.755-5.077 2.801-8.135 2.801-0.521 0-1.041-0.025-1.563-0.088 2.917 1.86 6.36 2.948 10.079 2.948 12.067 0 18.661-9.995 18.661-18.651 0-0.276 0-0.557-0.021-0.839 1.287-0.917 2.401-2.079 3.281-3.396z"></path>
+            </svg>
+        </button>
+        <button aria-label="Log in with GitHub" class="icon" onclick="LoginWithGithub('@ViewBag.UrlLoginWithGithub')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5 fill-current">
+                <path d="M16 0.396c-8.839 0-16 7.167-16 16 0 7.073 4.584 13.068 10.937 15.183 0.803 0.151 1.093-0.344 1.093-0.772 0-0.38-0.009-1.385-0.015-2.719-4.453 0.964-5.391-2.151-5.391-2.151-0.729-1.844-1.781-2.339-1.781-2.339-1.448-0.989 0.115-0.968 0.115-0.968 1.604 0.109 2.448 1.645 2.448 1.645 1.427 2.448 3.744 1.74 4.661 1.328 0.14-1.031 0.557-1.74 1.011-2.135-3.552-0.401-7.287-1.776-7.287-7.907 0-1.751 0.62-3.177 1.645-4.297-0.177-0.401-0.719-2.031 0.141-4.235 0 0 1.339-0.427 4.4 1.641 1.281-0.355 2.641-0.532 4-0.541 1.36 0.009 2.719 0.187 4 0.541 3.043-2.068 4.381-1.641 4.381-1.641 0.859 2.204 0.317 3.833 0.161 4.235 1.015 1.12 1.635 2.547 1.635 4.297 0 6.145-3.74 7.5-7.296 7.891 0.556 0.479 1.077 1.464 1.077 2.959 0 2.14-0.020 3.864-0.020 4.385 0 0.416 0.28 0.916 1.104 0.755 6.4-2.093 10.979-8.093 10.979-15.156 0-8.833-7.161-16-16-16z"></path>
+            </svg>
+        </button>
+    </div>
+    <small>
+        <a href="@Url.Action("QuenMatKhau","NguoiDung")" class="a2">Quên mật khẩu?</a>
+    </small>
+    <p>Bạn chưa có tài khoản? <a href="/NguoiDung/DangKy" class="a2">Đăng ký ngay!</a></p>
+</div>
+<script>
+
+    function LoginWithGoogle(url) {
+        window.location.href = url;
+    }
+
+    function LoginWithGithub(url) {
+        window.location.href = url;
+    }
+
+
+    function Login() {
+        var tenDangNhap = $("#TenDangNhap").val();
+        var matKhau = $("#MatKhau").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DangNhap", "NguoiDung")",
+            data: { "username": tenDangNhap, "password": matKhau },
+            success: function (data) {
+                $('#message').html('<div class="alert alert-success" role="alert">Thành công, Vui lòng chờ...</div >');
+                setTimeout(function () {
+                   window.location.href = '/Home/Index';
+                }, 3000);
+            },
+            error: function () {
+                $('#message').html('<div class="alert alert-danger" role="alert">Tài khoản hoặc mật khẩu không đúng!</div >');
+                setTimeout(function () {
+                    $('#message').html('');
+                }, 3000);
+            }
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            Login();
+        }
+    }
+</script>
