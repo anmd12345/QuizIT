@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.ModelBinding;
@@ -44,7 +45,7 @@ namespace QUIZ_IT.Areas.Admin.Api
         [HttpGet]
         public HttpResponseMessage ThemBinhLuan (string noiDung, int cauHoiId, int nguoiDungId)
         {
-            if (noiDung == "")
+            if (noiDung == "" || Regex.IsMatch(noiDung, @"<script[^>]*>|<\/script>|<[^>]+>|on\w+="))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }

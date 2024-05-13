@@ -737,8 +737,6 @@
             break;
         }
     }
-
-
 }
 
 <input type="hidden" id="CauHoiDauTien" value="@CauHoiHienTai" />
@@ -747,7 +745,7 @@
 
 <input type="hidden" id="SoLuongCauHoi" value="@ViewBag.SoLuongCauHoi" />
 <div class="text-center my-2" id="pp"></div>
-@if (@ViewBag.KhongCoCauHoi == null)
+@if (ViewBag.KhongCoCauHoi == null)
 {
     <div class="text-center my-5" id="CauHoi"><strong>@cauHoi1</strong></div>
     <div id="CumDapAn" class="container col-12" style="width: 100%; display: flex; flex-wrap: wrap;">

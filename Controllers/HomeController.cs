@@ -19,7 +19,7 @@ namespace QUIZ_IT.Controllers
 
         public ActionResult BatDauLamBai (int id)
         {
-            if (((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]) == null)
+           if (((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]) == null)
             {
                 return RedirectToAction("DangNhap", "NguoiDung");
             }
