@@ -738,7 +738,7 @@
         }
     }
 }
-
+<h1></h1>
 <input type="hidden" id="CauHoiDauTien" value="@CauHoiHienTai" />
 <input type="hidden" id="nguoiDungId" value="@user.Id" />
 <input type="hidden" id="NoiDungCauHoiDau" value="@cauHoi1" />
@@ -764,7 +764,7 @@
             break;
         }
     </div>
-    <div class="row" style="margin: 0 auto">
+    <div class="row" style="margin: 0 auto" id="contenttt">
         <div class="col-12">
             <div style="float: right" class="mx-5 my-2" id="CumButton">
                 <button onclick="CauHoiTruoc()" disabled style="cursor: pointer" class="cta">
@@ -951,7 +951,11 @@ else
     </div>
 </div>
 
+<script src="~/Scripts/removeResource.js"></script>
 <script>
+    let currUrl = location.href;
+    let _ = location.href.replace('id=', 'ld=');
+    history.pushState({}, null, _);
     document.addEventListener('DOMContentLoaded', function () {
         MapResult.set($('#NoiDungCauHoiDau').val(), "");
         var renderedNoiDungBoxBinhLuan = '';

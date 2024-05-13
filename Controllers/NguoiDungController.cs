@@ -14,6 +14,8 @@ using Octokit;
 using System.Net.Http;
 using QUIZ_IT.Models.Github;
 using QUIZ_IT.Constant;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace QUIZ_IT.Controllers
 {
@@ -35,7 +37,7 @@ namespace QUIZ_IT.Controllers
         [HttpPost]
         public ActionResult DangKy(string username, string password, string rePassword, string email, string name)
         {
-            NguoiDung user = CreateUser(username, password, email, name, false, 0, 2);
+            NguoiDung user = CreateUser(username, ComputeMD5Hash(password), email, name, false, 0, 2);
             db.NguoiDungs.InsertOnSubmit(user);
             db.SubmitChanges();
             Session[ApplicationConstant.SESSION.SESSION_LOGIN] = user;
@@ -55,6 +57,32 @@ namespace QUIZ_IT.Controllers
             var urlLoginWithGoogle = GoogleAuth.GetAuthUrl(ClientIDGoogle, urlGoogle);
             ViewBag.UrlLoginWithGoogle = urlLoginWithGoogle;
             return View();
+        }
+
+        public string ComputeMD5Hash (string input)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                // Chuyển đổi chuỗi input thành mảng byte
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+
+                // Tính toán giá trị hash cho mảng byte
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Chuyển đổi mảng byte thành chuỗi hex để trả về kết quả hash
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    builder.Append(hashBytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        public string VerifyMD5Hash (string input, string hashToVerify)
+        {
+            string computedHash = ComputeMD5Hash(input);
+
+            return string.Equals(computedHash, hashToVerify, StringComparison.OrdinalIgnoreCase) ? hashToVerify : "âsdasd";
         }
 
         public async Task<ActionResult> LoginWithGoogle(string code)
@@ -77,7 +105,7 @@ namespace QUIZ_IT.Controllers
                 }
                 else
                 {
-                    NguoiDung = CreateUser(googleUser.Email, "*", googleUser.Email, googleUser.Name, false, 0, 2);
+                    NguoiDung = CreateUser(googleUser.Email, ComputeMD5Hash("*"), googleUser.Email, googleUser.Name, false, 0, 2);
                     db.NguoiDungs.InsertOnSubmit(NguoiDung);
                     db.SubmitChanges();
                     Session[ApplicationConstant.SESSION.SESSION_LOGIN] = NguoiDung;
@@ -140,7 +168,7 @@ namespace QUIZ_IT.Controllers
                 }
                 else
                 {
-                    NguoiDung = CreateUser(GitProfile.Email, "*", GitProfile.Email, GitProfile.Email, false, 0, 2); ;
+                    NguoiDung = CreateUser(GitProfile.Email, ComputeMD5Hash("*"), GitProfile.Email, GitProfile.Email, false, 0, 2); ;
                     db.NguoiDungs.InsertOnSubmit(NguoiDung);
                     db.SubmitChanges();
                     Session[ApplicationConstant.SESSION.SESSION_LOGIN] = NguoiDung;
@@ -157,7 +185,7 @@ namespace QUIZ_IT.Controllers
         [HttpPost]
         public ActionResult DangNhap(string username, string password)
         {
-            NguoiDung nguoiDung = db.NguoiDungs.FirstOrDefault(u => u.TaiKhoan == username && u.MatKhau == password);
+            NguoiDung nguoiDung = db.NguoiDungs.FirstOrDefault(u => u.TaiKhoan == username && u.MatKhau == VerifyMD5Hash(password, u.MatKhau));
             if (nguoiDung != null)
             {
                 Session[ApplicationConstant.SESSION.SESSION_LOGIN] = nguoiDung;
