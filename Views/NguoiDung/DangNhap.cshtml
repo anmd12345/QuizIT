@@ -299,13 +299,30 @@
             url: "@Url.Action("DangNhap", "NguoiDung")",
             data: { "username": tenDangNhap, "password": matKhau },
             success: function (data) {
-                $('#message').html('<div class="alert alert-success" role="alert">Thành công, Vui lòng chờ...</div >');
-                setTimeout(function () {
-                   window.location.href = '/Home/Index';
-                }, 3000);
+                if (data != "OK") {
+                    if (data != "NO") {
+                        if (parseInt(data) >= 6) {
+                            $('#message').html('<div class="alert alert-danger" role="alert">Tài khoản của bạn đã bị khóa do nhập sai mật khẩu quá nhiều!</div >');
+                        } else {
+                            $('#message').html('<div class="alert alert-danger" role="alert">Mật khẩu không đúng! Bạn còn ' + (6 - parseInt(data)) + ' nhập sai.</div >');
+                        }
+                    } else {
+                        $('#message').html('<div class="alert alert-danger" role="alert">Tài khoản của bạn đã bị khóa do nhập sai mật khẩu quá nhiều!</div >');
+                    }
+
+                    setTimeout(function () {
+                        $('#message').html('');
+                    }, 3000);
+                } else {
+                    $('#message').html('<div class="alert alert-success" role="alert">Thành công, Vui lòng chờ...</div >');
+                    setTimeout(function () {
+                        window.location.href = '/Home/Index';
+                    }, 3000);
+                }
             },
-            error: function () {
+            error: function (error) {
                 $('#message').html('<div class="alert alert-danger" role="alert">Tài khoản hoặc mật khẩu không đúng!</div >');
+                console.log(error);
                 setTimeout(function () {
                     $('#message').html('');
                 }, 3000);

@@ -23,19 +23,19 @@ namespace QUIZ_IT.Controllers
     {
         private QuizITOpenConnectionDataContext db = new QuizITOpenConnectionDataContext();
         private Gmail gmail = new Gmail();
-        public ActionResult Index()
+        public ActionResult Index ()
         {
             return View();
         }
 
         [HttpGet]
-        public ActionResult DangKy()
+        public ActionResult DangKy ()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult DangKy(string username, string password, string rePassword, string email, string name)
+        public ActionResult DangKy (string username, string password, string rePassword, string email, string name)
         {
             NguoiDung user = CreateUser(username, ComputeMD5Hash(password), email, name, false, 0, 2);
             db.NguoiDungs.InsertOnSubmit(user);
@@ -44,7 +44,7 @@ namespace QUIZ_IT.Controllers
             return View();
         }
 
-        public ActionResult DangNhap()
+        public ActionResult DangNhap ()
         {
             var ClientIdGithub = ApplicationConstant.GITHUB.CLIENT_ID;
             var urlGithub = ApplicationConstant.GITHUB.REDIRECT_URL;
@@ -63,13 +63,10 @@ namespace QUIZ_IT.Controllers
         {
             using (MD5 md5 = MD5.Create())
             {
-                // Chuyển đổi chuỗi input thành mảng byte
                 byte[] inputBytes = Encoding.UTF8.GetBytes(input);
 
-                // Tính toán giá trị hash cho mảng byte
                 byte[] hashBytes = md5.ComputeHash(inputBytes);
 
-                // Chuyển đổi mảng byte thành chuỗi hex để trả về kết quả hash
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < hashBytes.Length; i++)
                 {
@@ -78,14 +75,14 @@ namespace QUIZ_IT.Controllers
                 return builder.ToString();
             }
         }
-        public string VerifyMD5Hash (string input, string hashToVerify)
+        public bool VerifyMD5Hash (string input, string hashToVerify)
         {
             string computedHash = ComputeMD5Hash(input);
 
-            return string.Equals(computedHash, hashToVerify, StringComparison.OrdinalIgnoreCase) ? hashToVerify : "âsdasd";
+            return string.Equals(computedHash, hashToVerify, StringComparison.OrdinalIgnoreCase);
         }
 
-        public async Task<ActionResult> LoginWithGoogle(string code)
+        public async Task<ActionResult> LoginWithGoogle (string code)
         {
             try
             {
@@ -119,8 +116,7 @@ namespace QUIZ_IT.Controllers
             return RedirectToAction("DangNhap", "NguoiDung");
         }
 
-
-        public async Task<ActionResult> LoginWithGithub(string code)
+        public async Task<ActionResult> LoginWithGithub (string code)
         {
             try
             {
@@ -183,27 +179,45 @@ namespace QUIZ_IT.Controllers
         }
 
         [HttpPost]
-        public ActionResult DangNhap(string username, string password)
+        public ActionResult DangNhap (string username, string password)
         {
-            NguoiDung nguoiDung = db.NguoiDungs.FirstOrDefault(u => u.TaiKhoan == username && u.MatKhau == VerifyMD5Hash(password, u.MatKhau));
+            NguoiDung nguoiDung = db.NguoiDungs.FirstOrDefault(u => u.TaiKhoan == username && u.TrangThai == false);
             if (nguoiDung != null)
             {
-                Session[ApplicationConstant.SESSION.SESSION_LOGIN] = nguoiDung;
-                return View(nguoiDung);
+                if (VerifyMD5Hash(password, nguoiDung.MatKhau))
+                {
+                    nguoiDung.countLoginFail = 0;
+                    db.SubmitChanges();
+                    Session[ApplicationConstant.SESSION.SESSION_LOGIN] = nguoiDung;
+                    var settings = new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    };
+                    var json = JsonConvert.SerializeObject(nguoiDung, settings);
+                    return Json("OK");
+                }
+                else
+                {
+                    nguoiDung.countLoginFail++;
+                    if (nguoiDung.countLoginFail == 6)
+                    {
+                        nguoiDung.TrangThai = true;
+                    }
+                    db.SubmitChanges();
+                    return Json(nguoiDung.countLoginFail);
+                }
+
             }
-            else
-            {
-                return HttpNotFound();
-            }
+            return Json("NO");
         }
 
-        public ActionResult DangXuat()
+        public ActionResult DangXuat ()
         {
             Session.Remove("NguoiDung");
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Pro()
+        public ActionResult Pro ()
         {
             if (UserIsEmpty((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]))
             {
@@ -212,9 +226,7 @@ namespace QUIZ_IT.Controllers
             return View();
         }
 
-
-
-        public ActionResult NangCapCoBan()
+        public ActionResult NangCapCoBan ()
         {
             if (UserIsEmpty((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]))
             {
@@ -224,7 +236,7 @@ namespace QUIZ_IT.Controllers
         }
 
         [HttpGet]
-        public ActionResult ThanhToan(int upgradeType)
+        public ActionResult ThanhToan (int upgradeType)
         {
             if (UserIsEmpty((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]))
             {
@@ -290,7 +302,7 @@ namespace QUIZ_IT.Controllers
             return Redirect(urlPayments);
         }
 
-        public ActionResult NangCapVipPro()
+        public ActionResult NangCapVipPro ()
         {
             if (UserIsEmpty((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]))
             {
@@ -299,14 +311,14 @@ namespace QUIZ_IT.Controllers
             return View();
         }
 
-        public ActionResult QuenMatKhau()
+        public ActionResult QuenMatKhau ()
         {
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult QuenMatKhau(string email)
+        public ActionResult QuenMatKhau (string email)
         {
             string newPass = "@" + GenerateRandomNumber() + "#";
             var nguoiDung = db.NguoiDungs.FirstOrDefault(n => n.Email.Equals(email));
@@ -323,7 +335,7 @@ namespace QUIZ_IT.Controllers
         }
 
         [HttpGet]
-        public ActionResult DoiMatKhau()
+        public ActionResult DoiMatKhau ()
         {
             if (UserIsEmpty((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]))
             {
@@ -333,7 +345,7 @@ namespace QUIZ_IT.Controllers
         }
 
         [HttpPost]
-        public ActionResult DoiMatKhau(string currentPassword, string newPassword)
+        public ActionResult DoiMatKhau (string currentPassword, string newPassword)
         {
             var nguoiDung = db.NguoiDungs.FirstOrDefault(n => n.TaiKhoan.Equals(((NguoiDung)Session[ApplicationConstant.SESSION.SESSION_LOGIN]).TaiKhoan));
             if (nguoiDung != null)
@@ -355,18 +367,18 @@ namespace QUIZ_IT.Controllers
             }
         }
 
-        public int GenerateRandomNumber()
+        public int GenerateRandomNumber ()
         {
             Random random = new Random();
             return random.Next(100000, 1000000);
         }
 
-        public static bool UserIsEmpty(NguoiDung user)
+        public static bool UserIsEmpty (NguoiDung user)
         {
             return user == null;
         }
 
-        public NguoiDung CreateUser(string username, string password, string email, string name, bool trangThai, int vip, int quyen)
+        public NguoiDung CreateUser (string username, string password, string email, string name, bool trangThai, int vip, int quyen)
         {
             NguoiDung user = new NguoiDung();
             user.TaiKhoan = username;
@@ -379,8 +391,7 @@ namespace QUIZ_IT.Controllers
             return user;
         }
 
-
-        public GiaoDich CreateOrder(string MaGiaoDich, bool TrangThai, DateTime NgayTao, int NguoiDungId)
+        public GiaoDich CreateOrder (string MaGiaoDich, bool TrangThai, DateTime NgayTao, int NguoiDungId)
         {
             GiaoDich giaoDich = new GiaoDich();
             giaoDich.MaGiaoDich = MaGiaoDich;

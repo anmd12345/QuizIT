@@ -951,7 +951,37 @@ else
     </div>
 </div>
 
-<script src="~/Scripts/removeResource.js"></script>
+<script>
+    document.addEventListener('keydown', function (e) {
+        if (e.keyCode === 123 || // F12
+            (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+            (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+        ) {
+            alert('Chức năng này đã bị vô hiệu hóa!');
+            e.preventDefault();
+            removeScripts();
+        }
+    });
+
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        removeScripts();
+    });
+
+    function removeScripts() {
+        var scripts = document.getElementsByTagName('script');
+        for (var i = scripts.length - 1; i >= 0; i--) {
+            scripts[i].parentNode.removeChild(scripts[i]);
+        }
+    }
+
+
+    document.addEventListener('contextmenu', function (event) {
+        alert('Chức năng này đã bị vô hiệu hóa!');
+        event.preventDefault();
+    });
+
+</script>
 <script>
     let currUrl = location.href;
     let _ = location.href.replace('id=', 'ld=');
@@ -1005,7 +1035,7 @@ else
                 $.connection.hub.start().done(function () {
                     chat.server.message(data.BinhLuan.CauHoiId, data.BinhLuanId);
                 });
-                
+
                 if (data.DaThich == false) {
                     ChangeIcon.setAttribute('class', 'fa-regular fa-heart');
                     ChangeIcon.removeAttribute('style');
