@@ -40,46 +40,19 @@
         <classShapeMoniker Id="444265d1-08ad-4d67-a8bd-6758e185c852" />
       </nodes>
     </associationConnector>
-    <classShape Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" absoluteBounds="3.375, 1.75, 2, 2.3478011067708335">
-      <DataClassMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung" />
-      <nestedChildShapes>
-        <elementListCompartment Id="b2bb5b91-19a4-436e-9ea3-101657ef7561" absoluteBounds="3.39, 2.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(5.375 : 2.61464680989583); (6.25 : 2.61464680989583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BaiTracNghiem" />
-      <nodes>
-        <classShapeMoniker Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" />
-        <classShapeMoniker Id="e5bc66fb-4d8e-4e39-aa5d-4cc30b9e4b8b" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 3.67714680989583); (3.375 : 3.67714680989583)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/Quyen/Quyen_NguoiDung" />
-      <nodes>
-        <classShapeMoniker Id="01d5991e-0809-4be9-a961-e5dba1712070" />
-        <classShapeMoniker Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" />
-      </nodes>
-    </associationConnector>
     <classShape Id="3e14a4a9-3049-463c-8ed1-700dd6b44aad" absoluteBounds="0.5, 0.5, 2, 1.5785953776041666">
       <DataClassMoniker Name="/QuizITOpenConnectionDataContext/BinhLuanChiTiet" />
       <nestedChildShapes>
         <elementListCompartment Id="2c4aaad7-165d-4216-9778-36770eac09fc" absoluteBounds="0.51500000000000012, 0.96, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.65625 : 1.75); (3.65625 : 0.53125); (2.5 : 0.53125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BinhLuanChiTiet" />
-      <nodes>
-        <classShapeMoniker Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" />
-        <classShapeMoniker Id="3e14a4a9-3049-463c-8ed1-700dd6b44aad" />
-      </nodes>
-    </associationConnector>
     <classShape Id="da0ec580-1a0a-4381-a996-f6e3cdddcdf3" absoluteBounds="4, 0.625, 2, 1.7708968098958331">
       <DataClassMoniker Name="/QuizITOpenConnectionDataContext/BinhLuan" />
       <nestedChildShapes>
         <elementListCompartment Id="dbcd799d-fe35-41b4-bdbc-72c14f1323d2" absoluteBounds="4.015, 1.085, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(4 : 1.15625); (3.73958333333333 : 1.15625 : JumpStart); (3.57291666666667 : 1.15625 : JumpEnd); (2.5 : 1.15625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 1.35179768880208); (3.80208333333333 : 1.35179768880208 : JumpStart); (3.63541666666667 : 1.35179768880208 : JumpEnd); (2.5 : 1.35179768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/QuizITOpenConnectionDataContext/BinhLuan/BinhLuan_BinhLuanChiTiet" />
       <nodes>
         <classShapeMoniker Id="da0ec580-1a0a-4381-a996-f6e3cdddcdf3" />
@@ -93,24 +66,51 @@
         <classShapeMoniker Id="da0ec580-1a0a-4381-a996-f6e3cdddcdf3" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.375 : 1.75); (4.375 : 0.375); (5 : 0.375); (5 : 0.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BinhLuan" />
-      <nodes>
-        <classShapeMoniker Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" />
-        <classShapeMoniker Id="da0ec580-1a0a-4381-a996-f6e3cdddcdf3" />
-      </nodes>
-    </associationConnector>
     <classShape Id="25a37c33-139f-4033-a18b-d6a59e23dfe4" absoluteBounds="6.125, 3.125, 2, 1.9631982421875">
       <DataClassMoniker Name="/QuizITOpenConnectionDataContext/GiaoDich" />
       <nestedChildShapes>
         <elementListCompartment Id="569e648b-a115-46ee-a7aa-cceec66bb4c3" absoluteBounds="6.14, 3.585, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.375 : 3.61140055338542); (6.125 : 3.61140055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="d071965c-d735-485f-9c61-a38eee134ed3" absoluteBounds="3.5, 3, 2, 2.5401025390625">
+      <DataClassMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung" />
+      <nestedChildShapes>
+        <elementListCompartment Id="07a35cef-943a-4ee8-9680-368be872eca9" absoluteBounds="3.5149999999999997, 3.46, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 5.345400390625); (8.21875 : 5.345400390625); (8.21875 : 2.77089680989583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BaiTracNghiem" />
+      <nodes>
+        <classShapeMoniker Id="d071965c-d735-485f-9c61-a38eee134ed3" />
+        <classShapeMoniker Id="e5bc66fb-4d8e-4e39-aa5d-4cc30b9e4b8b" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(3.71875 : 3); (3.71875 : 0.53125); (2.5 : 0.53125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BinhLuanChiTiet" />
+      <nodes>
+        <classShapeMoniker Id="d071965c-d735-485f-9c61-a38eee134ed3" />
+        <classShapeMoniker Id="3e14a4a9-3049-463c-8ed1-700dd6b44aad" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.75 : 3); (4.75 : 2.39589680989583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_BinhLuan" />
+      <nodes>
+        <classShapeMoniker Id="d071965c-d735-485f-9c61-a38eee134ed3" />
+        <classShapeMoniker Id="da0ec580-1a0a-4381-a996-f6e3cdddcdf3" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 4.10659912109375); (6.125 : 4.10659912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/QuizITOpenConnectionDataContext/NguoiDung/NguoiDung_GiaoDich" />
       <nodes>
-        <classShapeMoniker Id="5cc8697b-a87b-404f-aa4b-8025b2a45778" />
+        <classShapeMoniker Id="d071965c-d735-485f-9c61-a38eee134ed3" />
         <classShapeMoniker Id="25a37c33-139f-4033-a18b-d6a59e23dfe4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 3.50564697265625); (3.5 : 3.50564697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/QuizITOpenConnectionDataContext/Quyen/Quyen_NguoiDung" />
+      <nodes>
+        <classShapeMoniker Id="01d5991e-0809-4be9-a961-e5dba1712070" />
+        <classShapeMoniker Id="d071965c-d735-485f-9c61-a38eee134ed3" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>
