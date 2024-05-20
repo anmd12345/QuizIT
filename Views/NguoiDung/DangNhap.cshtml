@@ -299,6 +299,7 @@
             url: "@Url.Action("DangNhap", "NguoiDung")",
             data: { "username": tenDangNhap, "password": matKhau },
             success: function (data) {
+                console.log(data);
                 if (data != "OK") {
                     if (data != "NO") {
                         if (parseInt(data) >= 6) {

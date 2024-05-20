@@ -38,6 +38,7 @@ namespace QUIZ_IT.Controllers
         public ActionResult DangKy (string username, string password, string rePassword, string email, string name)
         {
             NguoiDung user = CreateUser(username, ComputeMD5Hash(password), email, name, false, 0, 2);
+            user.countLoginFail = 0;
             db.NguoiDungs.InsertOnSubmit(user);
             db.SubmitChanges();
             Session[ApplicationConstant.SESSION.SESSION_LOGIN] = user;
